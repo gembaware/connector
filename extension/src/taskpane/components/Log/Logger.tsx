@@ -79,9 +79,8 @@ class Logger extends React.Component<LoggerProps, LoggerState> {
             const requestJson = {
                 res_id: this.props.resId,
                 model: this.props.model,
-                message: message,
+                message: [message],
                 attachments: [],
-                gmb_val_from_connector: this.props.customFieldValue,
             };
 
             //check if attachment size is bigger then the threshold
@@ -159,8 +158,11 @@ class Logger extends React.Component<LoggerProps, LoggerState> {
                 );
                 doc.body.innerHTML += `<div class="text-danger">${warningMessage}</div>`;
             }
-
-            requestJson.message = doc.body.innerHTML;
+            if (this.props.customFieldValue) {
+                requestJson.message = [doc.body.innerHTML, this.props.customFieldValue];
+            } else {
+                requestJson.message = [doc.body.innerHTML, '']
+            }
             requestJson.attachments = attachments;
 
             const logRequest = sendHttpRequest(

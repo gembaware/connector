@@ -24,6 +24,7 @@
     <setting file="file://$PROJECT_DIR$/controllers/gmb_custom_mail_plugin.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/controllers/gmb_mail_plugin.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/models/mail_message.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/models/mail_thread.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/views/mail_message_views.xml" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectColorInfo">{
@@ -34,24 +35,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/home/lugagnet/gembaware/odoo17/custom-addons/gmb_connector_custom",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lugagnet/gembaware/odoo15/custom-addons/filestore_cleaner&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -79,6 +80,15 @@
       <workItem from="1715845141142" duration="7533000" />
       <workItem from="1715864858403" duration="2153000" />
       <workItem from="1715867104669" duration="3582000" />
+      <workItem from="1715932331826" duration="1423000" />
+      <workItem from="1715937141523" duration="7000" />
+      <workItem from="1716188672380" duration="63000" />
+      <workItem from="1716188766990" duration="344000" />
+      <workItem from="1716190298996" duration="7575000" />
+      <workItem from="1716198562435" duration="138000" />
+      <workItem from="1716274069262" duration="52000" />
+      <workItem from="1716275025948" duration="4875000" />
+      <workItem from="1716280692806" duration="1081000" />
     </task>
     <servers />
   </component>
