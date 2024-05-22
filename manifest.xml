@@ -31,6 +31,7 @@
   <Permissions>ReadWriteItem</Permissions>
   <Rule xsi:type="RuleCollection" Mode="Or">
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+    <!-- Added things -->
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit" />
   </Rule>
   <DisableEntityHighlighting>false</DisableEntityHighlighting>
@@ -49,6 +50,31 @@
               <Group id="msgReadGroup">
                 <Label resid="GroupLabel"/>
                 <Control xsi:type="Button" id="msgReadOpenPaneButton">
+                  <Label resid="TaskpaneButton.Label"/>
+                  <Supertip>
+                    <Title resid="TaskpaneButton.Label"/>
+                    <Description resid="TaskpaneButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="64" resid="Icon.64x64"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="128" resid="Icon.128x128"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+          <!-- Added things -->
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgComposeGroup">
+                <Label resid="GroupLabel"/>
+                <Control xsi:type="Button" id="msgComposeOpenPaneButton">
                   <Label resid="TaskpaneButton.Label"/>
                   <Supertip>
                     <Title resid="TaskpaneButton.Label"/>
