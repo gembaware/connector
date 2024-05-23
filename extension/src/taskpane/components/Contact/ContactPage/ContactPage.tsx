@@ -21,6 +21,7 @@ type ContactPageProps = {
     onPartnerChanged?: (Partner) => void;
     loadPartner: boolean;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 type ContactPageState = {
@@ -142,7 +143,8 @@ class ContactPage extends React.Component<ContactPageProps, ContactPageState> {
 
         const leadsList = this.isCrmInstalled() && (
             <SectionLeads partner={this.state.partner} canCreatePartner={this.state.canCreatePartner}
-            customFieldValue={this.props.customFieldValue}/>
+            customFieldValue={this.props.customFieldValue}
+            gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}/>
         );
 
         const tasksList = this.isProjectInstalled() && (
@@ -151,12 +153,14 @@ class ContactPage extends React.Component<ContactPageProps, ContactPageState> {
                 canCreatePartner={this.state.canCreatePartner}
                 canCreateProject={this.state.canCreateProject}
                 customFieldValue={this.props.customFieldValue}
+                gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
             />
         );
 
         const ticketsList = this.isHelpdeskInstalled() && (
             <SectionTickets partner={this.state.partner} canCreatePartner={this.state.canCreatePartner}
-            customFieldValue={this.props.customFieldValue}/>
+            customFieldValue={this.props.customFieldValue}
+            gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}/>
         );
 
         const onItemClick = this.props.partner.isAddedToDatabase() ? this.viewContact : null;
@@ -169,6 +173,7 @@ class ContactPage extends React.Component<ContactPageProps, ContactPageState> {
                         canCreatePartner={this.state.canCreatePartner}
                         onItemClick={onItemClick}
                         customFieldValue={this.props.customFieldValue}
+                        gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
                     />
                 </div>
                 {leadsList}

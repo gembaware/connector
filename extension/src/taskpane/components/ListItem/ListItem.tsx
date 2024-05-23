@@ -13,6 +13,7 @@ type ListItemProps = {
     res_id: number;
     logTitle: string;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 class ListItem extends React.Component<ListItemProps, {}> {
@@ -33,7 +34,8 @@ class ListItem extends React.Component<ListItemProps, {}> {
                         )}
                     </div>
                     <Logger resId={this.props.res_id} model={this.props.model} tooltipContent={this.props.logTitle}
-                    customFieldValue={this.props.customFieldValue}/>
+                    customFieldValue={this.props.customFieldValue}
+                    gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}/>
                 </div>
             </div>
         );

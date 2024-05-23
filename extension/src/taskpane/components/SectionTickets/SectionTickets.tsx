@@ -10,6 +10,7 @@ type SectionTicketsProps = {
     partner: Partner;
     canCreatePartner: boolean;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 type SectionTicketsState = {
@@ -41,6 +42,7 @@ class SectionTickets extends React.Component<SectionTicketsProps, SectionTickets
                 msgLogEmail="Log Email Into Ticket"
                 getRecordDescription={(ticket) => ticket.isClosed && _t('Closed')}
                 customFieldValue={this.props.customFieldValue}
+                gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
             />
         );
     }

@@ -7,6 +7,7 @@ type ContactListProps = {
     canCreatePartner: boolean;
     onItemClick?: (partner: Partner) => void;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 /**
@@ -27,6 +28,7 @@ const ContactList = (props: ContactListProps) => {
                         onItemClick={onPartnerClick}
                         key={partner.id}
                         customFieldValue={props.customFieldValue}
+                        gmbDropDownSelectedValue={props.gmbDropDownSelectedValue}
                     />
                 );
             })}

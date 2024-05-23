@@ -11,6 +11,7 @@ type ContactSectionProps = {
     canCreatePartner: boolean;
     onPartnerInfoChanged?: (partner: Partner) => void;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 class ContactSection extends React.Component<ContactSectionProps, {}> {
@@ -30,6 +31,7 @@ class ContactSection extends React.Component<ContactSectionProps, {}> {
                     canCreatePartner={this.props.canCreatePartner}
                     onItemClick={onItemClick}
                     customFieldValue={this.props.customFieldValue}
+                    gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
                 />
             </div>
         );

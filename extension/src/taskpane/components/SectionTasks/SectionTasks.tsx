@@ -14,6 +14,7 @@ type SectionTasksProps = {
     canCreatePartner: boolean;
     canCreateProject: boolean;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 type SectionTasksState = {
@@ -67,6 +68,7 @@ class SectionTasks extends React.Component<SectionTasksProps, SectionTasksState>
                     getRecordDescription={(task) => task.projectName}
                     onClickCreate={this.toggleProjectCallout}
                     customFieldValue={this.props.customFieldValue}
+                    gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
                 />
                 {this.state.isProjectCalloutOpen && (
                     <Callout

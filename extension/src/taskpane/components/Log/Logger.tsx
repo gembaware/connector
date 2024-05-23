@@ -20,6 +20,7 @@ type LoggerProps = {
     model: string;
     tooltipContent: string;
     customFieldValue?:string;
+    gmbDropDownSelectedValue?: string;
 };
 
 type LoggerState = {
@@ -158,11 +159,11 @@ class Logger extends React.Component<LoggerProps, LoggerState> {
                 );
                 doc.body.innerHTML += `<div class="text-danger">${warningMessage}</div>`;
             }
-            if (this.props.customFieldValue) {
-                requestJson.message = [doc.body.innerHTML, this.props.customFieldValue];
-            } else {
-                requestJson.message = [doc.body.innerHTML, '']
-            }
+            requestJson.message = [
+                doc.body.innerHTML,
+                this.props.customFieldValue ? this.props.customFieldValue : '',
+                this.props.gmbDropDownSelectedValue ? this.props.gmbDropDownSelectedValue : ''
+            ]
             requestJson.attachments = attachments;
 
             const logRequest = sendHttpRequest(

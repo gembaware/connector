@@ -15,6 +15,7 @@ type CustomContactListItemProps = {
     canCreatePartner: boolean;
     onItemClick?: (partner: Partner) => void;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 class ContactListItem extends React.Component<CustomContactListItemProps, {}> {
@@ -40,7 +41,8 @@ class ContactListItem extends React.Component<CustomContactListItemProps, {}> {
     render() {
         const logButton = this.props.partner.isAddedToDatabase() && this.props.partner.canWriteOnPartner && (
             <Logger resId={this.props.partner.id} model="res.partner" tooltipContent={_t('Log Email Into Contact')}
-            customFieldValue={this.props.customFieldValue}/>
+            customFieldValue={this.props.customFieldValue}
+            gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}/>
         );
 
         const { name, email, title: jobTitle, phone } = this.props.partner;

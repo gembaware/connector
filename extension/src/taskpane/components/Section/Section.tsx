@@ -35,6 +35,7 @@ type SectionAbstractProps = {
     msgLogEmail: string;
     getRecordDescription: (any) => string;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 type SectionAbstractState = {
@@ -122,6 +123,7 @@ class Section extends React.Component<SectionAbstractProps, SectionAbstractState
                             description={this.props.getRecordDescription(record)}
                             logTitle={_t(this.props.msgLogEmail)}
                             customFieldValue={this.props.customFieldValue}
+                            gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
                         />
                     ))}
                 </div>

@@ -1,0 +1,7 @@
+.drop-down-list-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: stretch;
+    margin: 8px 8px 16px 8px;
+}

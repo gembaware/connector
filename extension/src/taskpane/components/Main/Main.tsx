@@ -20,6 +20,7 @@ import EnrichmentInfo, { EnrichmentInfoType } from '../../../classes/EnrichmentI
 import Progress from '../GrayOverlay';
 import { TooltipHost } from 'office-ui-fabric-react';
 import { _t, saveTranslations, translationsExpired } from '../../../utils/Translator';
+import GmbDropDownList from "../GmbDropDownList/GmbDropDownList";
 
 type MainProps = {
     canCreatePartner: boolean;
@@ -37,6 +38,7 @@ type MainState = {
     contactKey: number; //used for contact refresh
     loadPartner: boolean;
     customFieldValue: string;
+    gmbDropDownListValue: string;
 };
 
 enum BackStackItemType {
@@ -67,6 +69,7 @@ class Main extends React.Component<MainProps, MainState> {
             contactKey: Math.random(),
             loadPartner: true,
             customFieldValue: undefined,
+            gmbDropDownListValue: "",
         };
 
         this.companyCache = new CompanyCache(2, 200, 0.25);
@@ -74,12 +77,13 @@ class Main extends React.Component<MainProps, MainState> {
 
     componentDidMount() {
         if (this.context.isConnected()) {
-            this.getAllMatchedPartnersRequest();
-            if (translationsExpired()) {
-                this.getTranslations();
-            } else {
-                this.setState({ translationsLoading: false });
-            }
+            this.getAllMatchedPartnersRequest().then(() => {
+                if (translationsExpired()) {
+                    this.getTranslations();
+                } else {
+                    this.setState({ translationsLoading: false });
+                }
+            })
         } else {
             this.setState({ translationsLoading: false });
             this.getPartnerDisconnectedRequest();
@@ -122,57 +126,108 @@ class Main extends React.Component<MainProps, MainState> {
             });
     };
 
-    private getAllMatchedPartnersRequest = () => {
+    private getAllMatchedPartnersRequest = async () => {
         if (!Office.context.mailbox.item) {
             return;
         }
 
-        let emailInfo = this.getEmailInfo();
-        let email = emailInfo.email;
-        let displayName = emailInfo.displayName;
+        let emailInfos = this.getEmailInfo()
+        let email = emailInfos.email;
+        let displayName = emailInfos.displayName;
 
-        const CancellableMatchedPartnersRequest = sendHttpRequest(
-            HttpVerb.POST,
-            api.baseURL + api.searchPartner,
-            ContentType.Json,
-            this.context.getConnectionToken(),
-            {
-                search_term: email,
-            },
-            true,
-        );
-        this.context.addRequestCanceller(CancellableMatchedPartnersRequest.cancel);
-        CancellableMatchedPartnersRequest.promise
-            .then((response) => {
-                const parsed = JSON.parse(response);
-                let partners = parsed.result.partners.map((partner_json) => {
-                    return PartnerData.fromJSON(partner_json);
-                });
-                if (partners.length > 0) {
-                    partners = Partner.sortBestMatches(email, displayName, partners);
-                    this.setState({
-                        matchedPartners: partners,
-                        selectedPartner: partners[0],
+        if (!email) {
+            let promiseEmailInfos = this.getEmailInfosAsync();
+            await promiseEmailInfos.then((result) => {
+                let emailPromise = result.email;
+                let displayNamePromise = result.displayName;
+
+                const CancellableMatchedPartnersRequest = sendHttpRequest(
+                    HttpVerb.POST,
+                    api.baseURL + api.searchPartner,
+                    ContentType.Json,
+                    this.context.getConnectionToken(),
+                    {
+                        search_term: emailPromise,
+                    },
+                    true,
+                );
+                this.context.addRequestCanceller(CancellableMatchedPartnersRequest.cancel);
+                CancellableMatchedPartnersRequest.promise
+                    .then((response) => {
+                        const parsed = JSON.parse(response);
+                        let partners = parsed.result.partners.map((partner_json) => {
+                            return PartnerData.fromJSON(partner_json);
+                        });
+                        if (partners.length > 0) {
+                            partners = Partner.sortBestMatches(emailPromise, displayNamePromise, partners);
+                            this.setState({
+                                matchedPartners: partners,
+                                selectedPartner: partners[0],
+                            });
+                        } else {
+                            //no partners were found in database, we create a new partner
+                            const newPartner = PartnerData.createNewPartnerFromEmail(displayNamePromise, emailPromise);
+                            partners.push(newPartner);
+                            this.setState({
+                                matchedPartners: partners,
+                                selectedPartner: partners[0],
+                            });
+                        }
+                        this.setState({partnersLoading: false});
+                    })
+                    .catch((error) => {
+                        this.context.showHttpErrorMessage(error);
+                        this.setState({partnersLoading: false});
+                        console.log(error);
                     });
-                } else {
-                    //no partners were found in database, we create a new partner
-                    const newPartner = PartnerData.createNewPartnerFromEmail(displayName, email);
-                    partners.push(newPartner);
-                    this.setState({
-                        matchedPartners: partners,
-                        selectedPartner: partners[0],
-                    });
-                }
-                this.setState({ partnersLoading: false });
-            })
-            .catch((error) => {
-                this.context.showHttpErrorMessage(error);
-                this.setState({ partnersLoading: false });
-                console.log(error);
             });
+
+        } else {
+            const CancellableMatchedPartnersRequest = sendHttpRequest(
+                HttpVerb.POST,
+                api.baseURL + api.searchPartner,
+                ContentType.Json,
+                this.context.getConnectionToken(),
+                {
+                    search_term: email,
+                },
+                true,
+            );
+            this.context.addRequestCanceller(CancellableMatchedPartnersRequest.cancel);
+            CancellableMatchedPartnersRequest.promise
+                .then((response) => {
+                    const parsed = JSON.parse(response);
+                    let partners = parsed.result.partners.map((partner_json) => {
+                        return PartnerData.fromJSON(partner_json);
+                    });
+                    if (partners.length > 0) {
+                        partners = Partner.sortBestMatches(email, displayName, partners);
+                        this.setState({
+                            matchedPartners: partners,
+                            selectedPartner: partners[0],
+                        });
+                    } else {
+                        //no partners were found in database, we create a new partner
+                        const newPartner = PartnerData.createNewPartnerFromEmail(displayName, email);
+                        partners.push(newPartner);
+                        this.setState({
+                            matchedPartners: partners,
+                            selectedPartner: partners[0],
+                        });
+                    }
+                    this.setState({partnersLoading: false});
+                })
+                .catch((error) => {
+                    this.context.showHttpErrorMessage(error);
+                    this.setState({partnersLoading: false});
+                    console.log(error);
+                });
+        }
+
+
     };
 
-    private getEmailInfo = () => {
+    private getEmailInfo =  () => {
         let email = Office.context.mailbox.item.from.emailAddress;
         let displayName = Office.context.mailbox.item.from.displayName;
 
@@ -180,8 +235,43 @@ class Main extends React.Component<MainProps, MainState> {
             email = Office.context.mailbox.item.to[0].emailAddress;
             displayName = Office.context.mailbox.item.to[0].displayName;
         }
-        return { email: email, displayName: displayName };
-    };
+
+        return {email: email, displayName: displayName};
+    }
+
+    private getEmailInfosAsync(): Promise<{email: string, displayName: string}> {
+        let resolveRef;
+        let rejectRef;
+
+        let dataPromise: Promise<{email: string, displayName: string}> = new Promise((resolve, reject) => {
+            resolveRef = resolve;
+            rejectRef = reject;
+        })
+
+        let email;
+        let displayName;
+
+        let item = Office.context.mailbox.item
+        let toRecipients: Office.Recipients
+        if (item.itemType == Office.MailboxEnums.ItemType.Message) {
+            toRecipients = item.to;
+        }
+
+        toRecipients.getAsync((asyncResult) => {
+            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                console.log(asyncResult.error.message);
+                rejectRef(asyncResult.error.message);
+            }
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                console.log("[ÇA MARCHE]" + asyncResult.value[0].emailAddress)
+                email = asyncResult.value[0].emailAddress
+                displayName = asyncResult.value[0].displayName
+            }
+        });
+
+        resolveRef({email:email, displayName: displayName})
+        return dataPromise
+    }
 
     private getTranslations = () => {
         this.setState({ translationsLoading: true });
@@ -211,69 +301,141 @@ class Main extends React.Component<MainProps, MainState> {
             return;
         }
         Office.context.mailbox.getUserIdentityTokenAsync((idTokenResult) => {
-            let email = this.getEmailInfo().email;
-            let displayName = this.getEmailInfo().displayName;
+            let emailInfos = this.getEmailInfo()
+            let email = emailInfos.email
+            let displayName = emailInfos.displayName
 
-            const partner = PartnerData.createNewPartnerFromEmail(displayName, email);
+            if (!email) {
+                let promiseEmailInfos = this.getEmailInfosAsync();
+                promiseEmailInfos.then((result) => {
+                    let emailPromoise = result.email;
+                    let displayNamePromise = result.displayName;
 
-            const cachedCompany: CompanyData = this.companyCache.get(email);
+                    const partner = PartnerData.createNewPartnerFromEmail(displayNamePromise, emailPromoise);
 
-            if (cachedCompany) {
-                partner.company = cachedCompany;
-                partner.company.enrichmentStatus = EnrichmentStatus.enriched;
-                this.setState({
-                    matchedPartners: [partner],
-                    selectedPartner: partner,
-                    partnersLoading: false,
-                });
-            } else {
-                const senderDomain = email.split('@')[1];
-                const cancellableRequest = sendHttpRequest(
-                    HttpVerb.POST,
-                    api.iapLeadEnrichment,
-                    ContentType.Json,
-                    null,
-                    {
-                        params: {
-                            email: email,
-                            domain: senderDomain,
-                            extuid: idTokenResult.value,
-                        },
-                    },
-                );
-                this.context.addRequestCanceller(cancellableRequest.cancel);
-                cancellableRequest.promise
-                    .then((response) => {
-                        const parsed = JSON.parse(response);
-                        if ('error' in parsed.result) {
-                            const enrichmentInfo = new EnrichmentInfo(
-                                parsed.result.error.type,
-                                parsed.result.error.info,
-                            );
-                            if (enrichmentInfo.type != EnrichmentInfoType.NoData)
-                                this.context.showTopBarMessage(enrichmentInfo);
-                            partner.company = CompanyData.getEmptyCompany();
-                            partner.company.enrichmentStatus = EnrichmentStatus.enrichmentEmpty;
-                            this.setState({
-                                matchedPartners: [partner],
-                                selectedPartner: partner,
-                                partnersLoading: false,
-                            });
-                            return;
-                        }
-                        partner.company = CompanyData.fromRevealJSON(parsed.result);
-                        this.companyCache.add(partner.company);
+                    const cachedCompany: CompanyData = this.companyCache.get(emailPromoise);
+
+                    if (cachedCompany) {
+                        partner.company = cachedCompany;
                         partner.company.enrichmentStatus = EnrichmentStatus.enriched;
                         this.setState({
                             matchedPartners: [partner],
                             selectedPartner: partner,
                             partnersLoading: false,
                         });
-                    })
-                    .catch((error) => {
-                        this.context.showHttpErrorMessage(error);
-                        this.setState({ partnersLoading: false });
+                    } else {
+                        const senderDomain = emailPromoise.split('@')[1];
+                        const cancellableRequest = sendHttpRequest(
+                            HttpVerb.POST,
+                            api.iapLeadEnrichment,
+                            ContentType.Json,
+                            null,
+                            {
+                                params: {
+                                    email: emailPromoise,
+                                    domain: senderDomain,
+                                    extuid: idTokenResult.value,
+                                },
+                            },
+                        );
+                        this.context.addRequestCanceller(cancellableRequest.cancel);
+                        cancellableRequest.promise
+                            .then((response) => {
+                                const parsed = JSON.parse(response);
+                                if ('error' in parsed.result) {
+                                    const enrichmentInfo = new EnrichmentInfo(
+                                        parsed.result.error.type,
+                                        parsed.result.error.info,
+                                    );
+                                    if (enrichmentInfo.type != EnrichmentInfoType.NoData)
+                                        this.context.showTopBarMessage(enrichmentInfo);
+                                    partner.company = CompanyData.getEmptyCompany();
+                                    partner.company.enrichmentStatus = EnrichmentStatus.enrichmentEmpty;
+                                    this.setState({
+                                        matchedPartners: [partner],
+                                        selectedPartner: partner,
+                                        partnersLoading: false,
+                                    });
+                                    return;
+                                }
+                                partner.company = CompanyData.fromRevealJSON(parsed.result);
+                                this.companyCache.add(partner.company);
+                                partner.company.enrichmentStatus = EnrichmentStatus.enriched;
+                                this.setState({
+                                    matchedPartners: [partner],
+                                    selectedPartner: partner,
+                                    partnersLoading: false,
+                                });
+                            })
+                            .catch((error) => {
+                                this.context.showHttpErrorMessage(error);
+                                this.setState({partnersLoading: false});
+                            });
+                    }
+                });
+            } else {
+
+                const partner = PartnerData.createNewPartnerFromEmail(displayName, email);
+
+                const cachedCompany: CompanyData = this.companyCache.get(email);
+
+                if (cachedCompany) {
+                    partner.company = cachedCompany;
+                    partner.company.enrichmentStatus = EnrichmentStatus.enriched;
+                    this.setState({
+                        matchedPartners: [partner],
+                        selectedPartner: partner,
+                        partnersLoading: false,
                     });
+                } else {
+                    const senderDomain = email.split('@')[1];
+                    const cancellableRequest = sendHttpRequest(
+                        HttpVerb.POST,
+                        api.iapLeadEnrichment,
+                        ContentType.Json,
+                        null,
+                        {
+                            params: {
+                                email: email,
+                                domain: senderDomain,
+                                extuid: idTokenResult.value,
+                            },
+                        },
+                    );
+                    this.context.addRequestCanceller(cancellableRequest.cancel);
+                    cancellableRequest.promise
+                        .then((response) => {
+                            const parsed = JSON.parse(response);
+                            if ('error' in parsed.result) {
+                                const enrichmentInfo = new EnrichmentInfo(
+                                    parsed.result.error.type,
+                                    parsed.result.error.info,
+                                );
+                                if (enrichmentInfo.type != EnrichmentInfoType.NoData)
+                                    this.context.showTopBarMessage(enrichmentInfo);
+                                partner.company = CompanyData.getEmptyCompany();
+                                partner.company.enrichmentStatus = EnrichmentStatus.enrichmentEmpty;
+                                this.setState({
+                                    matchedPartners: [partner],
+                                    selectedPartner: partner,
+                                    partnersLoading: false,
+                                });
+                                return;
+                            }
+                            partner.company = CompanyData.fromRevealJSON(parsed.result);
+                            this.companyCache.add(partner.company);
+                            partner.company.enrichmentStatus = EnrichmentStatus.enriched;
+                            this.setState({
+                                matchedPartners: [partner],
+                                selectedPartner: partner,
+                                partnersLoading: false,
+                            });
+                        })
+                        .catch((error) => {
+                            this.context.showHttpErrorMessage(error);
+                            this.setState({partnersLoading: false});
+                        });
+                }
             }
         });
     };
@@ -483,11 +645,24 @@ class Main extends React.Component<MainProps, MainState> {
                             loadPartner={this.state.loadPartner}
                             key={this.state.contactKey}
                             customFieldValue={this.state.customFieldValue}
+                            gmbDropDownSelectedValue={this.state.gmbDropDownListValue}
                         />
                     </>
                 );
             }
         }
+
+        const gmbDropDownList = (
+            <>
+                <GmbDropDownList
+                    data={['un', 'deux', 'trois']}
+                    onchange={function (value: string) {
+                        console.log("selected -- " + value);
+                        this.setState({gmbDropDownListValue: value});
+                    }.bind(this)}
+                />
+            </>
+        )
 
         const customField = (
             <>
@@ -504,6 +679,7 @@ class Main extends React.Component<MainProps, MainState> {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <div>{topBar}</div>
+                <div>{gmbDropDownList}</div>
                 <div style={{ flex: 1 }}>{mainContent}{customField}</div>
                 <div>{connectionButton}</div>
             </div>

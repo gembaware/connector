@@ -12,6 +12,7 @@ type LeadSectionProps = {
     partner: Partner;
     canCreatePartner: boolean;
     customFieldValue?: string;
+    gmbDropDownSelectedValue?: string;
 };
 
 type SectionLeadsState = {
@@ -58,6 +59,7 @@ class SectionLeads extends React.Component<LeadSectionProps, SectionLeadsState> 
                 msgLogEmail="Log Email Into Lead"
                 getRecordDescription={this.getLeadDescription}
                 customFieldValue={this.props.customFieldValue}
+                gmbDropDownSelectedValue={this.props.gmbDropDownSelectedValue}
             />
         );
     }
