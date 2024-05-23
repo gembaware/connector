@@ -125,23 +125,16 @@ class Main extends React.Component<MainProps, MainState> {
             });
     };
 
-    private getAllMatchedPartnersRequest = async () => {
+    private getAllMatchedPartnersRequest = () => {
         if (!Office.context.mailbox.item) {
             return;
         }
 
         let emailInfos = this.getEmailInfo()
-        if (emailInfos.email) {
-            this._getAllMatchedPartnerRequest(emailInfos);
-        } else {
-            let emailInfos = await this.getEmailInfosAsync();
-            this._getAllMatchedPartnerRequest(emailInfos);
-        }
-    };
-
-    private _getAllMatchedPartnerRequest(emailInfos: { email: string, displayName: string }) {
         let email = emailInfos.email;
         let displayName = emailInfos.displayName;
+
+
         const CancellableMatchedPartnersRequest = sendHttpRequest(
             HttpVerb.POST,
             api.baseURL + api.searchPartner,
@@ -174,14 +167,14 @@ class Main extends React.Component<MainProps, MainState> {
                         selectedPartner: partners[0],
                     });
                 }
-                this.setState({ partnersLoading: false });
+                this.setState({partnersLoading: false});
             })
             .catch((error) => {
                 this.context.showHttpErrorMessage(error);
-                this.setState({ partnersLoading: false });
+                this.setState({partnersLoading: false});
                 console.log(error);
             });
-    }
+    };
 
     private getEmailInfo =  () => {
         let email = Office.context.mailbox.item.from.emailAddress;
@@ -195,39 +188,39 @@ class Main extends React.Component<MainProps, MainState> {
         return {email: email, displayName: displayName};
     }
 
-    private getEmailInfosAsync(): Promise<{email: string, displayName: string}> {
-        let resolveRef;
-        let rejectRef;
-
-        let dataPromise: Promise<{email: string, displayName: string}> = new Promise((resolve, reject) => {
-            resolveRef = resolve;
-            rejectRef = reject;
-        })
-
-        let email;
-        let displayName;
-
-        let item = Office.context.mailbox.item
-        let toRecipients: Office.Recipients
-        if (item.itemType == Office.MailboxEnums.ItemType.Message) {
-            toRecipients = item.to;
-        }
-
-        toRecipients.getAsync((asyncResult) => {
-            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                console.log(asyncResult.error.message);
-                rejectRef(asyncResult.error.message);
-            }
-            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                console.log("[ÇA MARCHE]" + asyncResult.value[0].emailAddress)
-                email = asyncResult.value[0].emailAddress
-                displayName = asyncResult.value[0].displayName
-            }
-        });
-
-        resolveRef({email:email, displayName: displayName})
-        return dataPromise
-    }
+    // private getEmailInfosAsync(): Promise<{email: string, displayName: string}> {
+    //     let resolveRef;
+    //     let rejectRef;
+    //
+    //     let dataPromise: Promise<{email: string, displayName: string}> = new Promise((resolve, reject) => {
+    //         resolveRef = resolve;
+    //         rejectRef = reject;
+    //     })
+    //
+    //     let email;
+    //     let displayName;
+    //
+    //     let item = Office.context.mailbox.item
+    //     let toRecipients: Office.Recipients
+    //     if (item.itemType == Office.MailboxEnums.ItemType.Message) {
+    //         toRecipients = item.to;
+    //     }
+    //
+    //     toRecipients.getAsync((asyncResult) => {
+    //         if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+    //             console.log(asyncResult.error.message);
+    //             rejectRef(asyncResult.error.message);
+    //         }
+    //         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+    //             console.log("[ÇA MARCHE]" + asyncResult.value[0].emailAddress)
+    //             email = asyncResult.value[0].emailAddress
+    //             displayName = asyncResult.value[0].displayName
+    //         }
+    //     });
+    //
+    //     resolveRef({email:email, displayName: displayName})
+    //     return dataPromise
+    // }
 
     private getTranslations = () => {
         this.setState({ translationsLoading: true });
@@ -256,83 +249,74 @@ class Main extends React.Component<MainProps, MainState> {
         if (!Office.context.mailbox.item) {
             return;
         }
-        Office.context.mailbox.getUserIdentityTokenAsync(async (idTokenResult) => {
-            let emailInfos = this.getEmailInfo();
-            if (emailInfos.email) {
-                this._getPartnerDisconnectedRequest(emailInfos, idTokenResult);
+        Office.context.mailbox.getUserIdentityTokenAsync((idTokenResult) => {
+            let emailInfos = this.getEmailInfo()
+            let email = emailInfos.email
+            let displayName = emailInfos.displayName
+
+            const partner = PartnerData.createNewPartnerFromEmail(displayName, email);
+
+            const cachedCompany: CompanyData = this.companyCache.get(email);
+
+            if (cachedCompany) {
+                partner.company = cachedCompany;
+                partner.company.enrichmentStatus = EnrichmentStatus.enriched;
+                this.setState({
+                    matchedPartners: [partner],
+                    selectedPartner: partner,
+                    partnersLoading: false,
+                });
             } else {
-                let emailInfos = await this.getEmailInfosAsync();
-                this._getPartnerDisconnectedRequest(emailInfos, idTokenResult);
-            }
-        });
-    };
-
-    private _getPartnerDisconnectedRequest(emailInfos:{ displayName: string, email: string }, idTokenResult: Office.AsyncResult<string>) {
-        let email = emailInfos.email;
-        let displayName = emailInfos.displayName
-
-        const partner = PartnerData.createNewPartnerFromEmail(displayName, email);
-
-        const cachedCompany: CompanyData = this.companyCache.get(email);
-
-        if (cachedCompany) {
-            partner.company = cachedCompany;
-            partner.company.enrichmentStatus = EnrichmentStatus.enriched;
-            this.setState({
-                matchedPartners: [partner],
-                selectedPartner: partner,
-                partnersLoading: false,
-            });
-        } else {
-            const senderDomain = email.split('@')[1];
-            const cancellableRequest = sendHttpRequest(
-                HttpVerb.POST,
-                api.iapLeadEnrichment,
-                ContentType.Json,
-                null,
-                {
-                    params: {
-                        email: email,
-                        domain: senderDomain,
-                        extuid: idTokenResult.value,
+                const senderDomain = email.split('@')[1];
+                const cancellableRequest = sendHttpRequest(
+                    HttpVerb.POST,
+                    api.iapLeadEnrichment,
+                    ContentType.Json,
+                    null,
+                    {
+                        params: {
+                            email: email,
+                            domain: senderDomain,
+                            extuid: idTokenResult.value,
+                        },
                     },
-                },
-            );
-            this.context.addRequestCanceller(cancellableRequest.cancel);
-            cancellableRequest.promise
-                .then((response) => {
-                    const parsed = JSON.parse(response);
-                    if ('error' in parsed.result) {
-                        const enrichmentInfo = new EnrichmentInfo(
-                            parsed.result.error.type,
-                            parsed.result.error.info,
-                        );
-                        if (enrichmentInfo.type != EnrichmentInfoType.NoData)
-                            this.context.showTopBarMessage(enrichmentInfo);
-                        partner.company = CompanyData.getEmptyCompany();
-                        partner.company.enrichmentStatus = EnrichmentStatus.enrichmentEmpty;
+                );
+                this.context.addRequestCanceller(cancellableRequest.cancel);
+                cancellableRequest.promise
+                    .then((response) => {
+                        const parsed = JSON.parse(response);
+                        if ('error' in parsed.result) {
+                            const enrichmentInfo = new EnrichmentInfo(
+                                parsed.result.error.type,
+                                parsed.result.error.info,
+                            );
+                            if (enrichmentInfo.type != EnrichmentInfoType.NoData)
+                                this.context.showTopBarMessage(enrichmentInfo);
+                            partner.company = CompanyData.getEmptyCompany();
+                            partner.company.enrichmentStatus = EnrichmentStatus.enrichmentEmpty;
+                            this.setState({
+                                matchedPartners: [partner],
+                                selectedPartner: partner,
+                                partnersLoading: false,
+                            });
+                            return;
+                        }
+                        partner.company = CompanyData.fromRevealJSON(parsed.result);
+                        this.companyCache.add(partner.company);
+                        partner.company.enrichmentStatus = EnrichmentStatus.enriched;
                         this.setState({
                             matchedPartners: [partner],
                             selectedPartner: partner,
                             partnersLoading: false,
                         });
-                        return;
-                    }
-                    partner.company = CompanyData.fromRevealJSON(parsed.result);
-                    this.companyCache.add(partner.company);
-                    partner.company.enrichmentStatus = EnrichmentStatus.enriched;
-                    this.setState({
-                        matchedPartners: [partner],
-                        selectedPartner: partner,
-                        partnersLoading: false,
+                    })
+                    .catch((error) => {
+                        this.context.showHttpErrorMessage(error);
+                        this.setState({partnersLoading: false});
                     });
-                })
-                .catch((error) => {
-                    this.context.showHttpErrorMessage(error);
-                    this.setState({ partnersLoading: false });
-                });
-        }
-    }
+            }
+        });
+    };
 
     private onSearchClick = (state) => {
         if (this.context.isConnected()) {
