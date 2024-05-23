@@ -47,3 +47,8 @@ if ((module as any).hot) {
         render(NextApp);
     });
 }
+
+// @ts-ignore
+function test() {
+    console.log('on send action')
+}
