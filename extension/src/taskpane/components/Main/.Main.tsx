@@ -184,7 +184,6 @@ class Main extends React.Component<MainProps, MainState> {
             email = Office.context.mailbox.item.to[0].emailAddress;
             displayName = Office.context.mailbox.item.to[0].displayName;
         }
-
         return {email: email, displayName: displayName};
     }
 

@@ -216,15 +216,15 @@ class Main extends React.Component<MainProps, MainState> {
             toRecipients = item.to;
         }
 
-        toRecipients.getAsync((asyncResult) => {
+        toRecipients.getAsync(async (asyncResult) => {
             if (asyncResult.status === Office.AsyncResultStatus.Failed) {
                 console.log(asyncResult.error.message);
                 rejectRef(asyncResult.error.message);
             }
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                 console.log("2")
-                email = asyncResult.value[0].emailAddress
-                displayName = asyncResult.value[0].displayName
+                email = await asyncResult.value[0].emailAddress
+                displayName = await asyncResult.value[0].displayName
             }
         });
         console.log("3")
