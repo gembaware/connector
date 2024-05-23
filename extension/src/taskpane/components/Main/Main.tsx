@@ -15,12 +15,12 @@ import ContactPage from '../Contact/ContactPage/ContactPage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Search, { SearchState } from '../Search/Search';
 import CustomField from "../CustomField/CustomField";
+import GmbDropDownList from "../GmbDropDownList/GmbDropDownList";
 import { faArrowLeft, faPlusCircle, faRedoAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import EnrichmentInfo, { EnrichmentInfoType } from '../../../classes/EnrichmentInfo';
 import Progress from '../GrayOverlay';
 import { TooltipHost } from 'office-ui-fabric-react';
 import { _t, saveTranslations, translationsExpired } from '../../../utils/Translator';
-import GmbDropDownList from "../GmbDropDownList/GmbDropDownList";
 
 type MainProps = {
     canCreatePartner: boolean;
@@ -134,7 +134,9 @@ class Main extends React.Component<MainProps, MainState> {
         if (emailInfos.email) {
             this._getAllMatchedPartnerRequest(emailInfos);
         } else {
+            console.log('1')
             let emailInfos = await this.getEmailInfosAsync();
+            console.log('4')
             this._getAllMatchedPartnerRequest(emailInfos);
         }
     };
@@ -142,6 +144,7 @@ class Main extends React.Component<MainProps, MainState> {
     private _getAllMatchedPartnerRequest(emailInfos: { email: string, displayName: string }) {
         let email = emailInfos.email;
         let displayName = emailInfos.displayName;
+        console.log('5')
         const CancellableMatchedPartnersRequest = sendHttpRequest(
             HttpVerb.POST,
             api.baseURL + api.searchPartner,
@@ -219,12 +222,12 @@ class Main extends React.Component<MainProps, MainState> {
                 rejectRef(asyncResult.error.message);
             }
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                console.log("[ÇA MARCHE]" + asyncResult.value[0].emailAddress)
+                console.log("2")
                 email = asyncResult.value[0].emailAddress
                 displayName = asyncResult.value[0].displayName
             }
         });
-
+        console.log("3")
         resolveRef({email:email, displayName: displayName})
         return dataPromise
     }
