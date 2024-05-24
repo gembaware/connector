@@ -26,7 +26,10 @@ module.exports = async (env, options)  => {
     ],
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".html", ".js"]
+      extensions: [".ts", ".tsx", ".html", ".js"],
+      fallback: {
+        "fs": false,
+      },
     },
     module: {
       rules: [
