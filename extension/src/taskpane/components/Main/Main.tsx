@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import * as deasync from 'deasync'
 import './Main.css';
 
 import { ContentType, HttpVerb, sendHttpRequest } from '../../../utils/httpRequest';
@@ -240,7 +240,7 @@ class Main extends React.Component<MainProps, MainState> {
         p.then(value => {result = value})
             .catch(err => {error = err})
 
-        require('deasync').loopWhile(() =>
+        deasync.loopWhile(() =>
             result === undefined && error === undefined)
 
         if (error !== undefined) {
