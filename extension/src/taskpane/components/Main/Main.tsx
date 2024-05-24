@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as deasync from 'deasync'
 import './Main.css';
 
 import { ContentType, HttpVerb, sendHttpRequest } from '../../../utils/httpRequest';
@@ -134,8 +133,13 @@ class Main extends React.Component<MainProps, MainState> {
         if (emailInfos.email) {
             this._getAllMatchedPartnerRequest(emailInfos);
         } else {
-            console.log('1')
-            let emailInfos = this.getEmailInfosAsync();
+            emailInfos = this.getEmailInfosAsync();
+            if (emailInfos === undefined) {
+                emailInfos = {
+                    email: Office.context.mailbox.userProfile.emailAddress,
+                    displayName: Office.context.mailbox.userProfile.displayName
+                }
+            }
             console.log('4')
             this._getAllMatchedPartnerRequest(emailInfos);
         }
@@ -206,7 +210,11 @@ class Main extends React.Component<MainProps, MainState> {
         if (item.itemType == Office.MailboxEnums.ItemType.Message) {
             toRecipients = item.to;
         }
-        return this._blockForPromiseSync(this._getEmailInfosAsync(toRecipients));
+        let emailInfos: { email: string, displayName: string } = undefined
+        this._getEmailInfosAsync(toRecipients).then((value) => {
+            return emailInfos = value;
+        });
+        return emailInfos
     }
 
     /**
@@ -218,7 +226,7 @@ class Main extends React.Component<MainProps, MainState> {
             toRecipients.getAsync((asyncResult) => {
                 if (asyncResult.status === Office.AsyncResultStatus.Failed) {
                     console.log(asyncResult.error.message);
-                    return resolve({ email: '', displayName: '' });
+                    resolve({ email: '', displayName: '' });
                 } else {
                     console.log('2');
                     let email = asyncResult.value[0].emailAddress;
@@ -227,26 +235,6 @@ class Main extends React.Component<MainProps, MainState> {
                 }
             });
         });
-    }
-
-    /**
-     * Blocker of promise to pause the program while the promise isn't resolve
-     * @param p promise to block
-     */
-    private _blockForPromiseSync<T>(p: Promise<T>): T {
-        let result: T | undefined = undefined;
-        let error: any | undefined = undefined;
-
-        p.then(value => {result = value})
-            .catch(err => {error = err})
-
-        deasync.loopWhile(() =>
-            result === undefined && error === undefined)
-
-        if (error !== undefined) {
-            throw error!
-        }
-        return result!
     }
 
     private getTranslations = () => {
