@@ -27,9 +27,9 @@ module.exports = async (env, options)  => {
     },
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"],
-      fallback: {
-        "fs": false,
-      },
+    },
+    node: {
+      fs: 'empty',
     },
     module: {
       rules: [
@@ -109,6 +109,5 @@ module.exports = async (env, options)  => {
       port: process.env.npm_package_config_dev_server_port || 3000
     }
   };
-
   return config;
 };
