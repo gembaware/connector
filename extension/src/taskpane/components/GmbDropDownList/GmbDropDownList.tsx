@@ -33,7 +33,7 @@ class GmbDropDownList extends React.Component<DropDownListProps, DropDownListSta
 
     render() {
 
-        let dropDownList : React.JSX.Element
+        let dropDownList
         if (this.props.defaultValue && !(this.props.defaultValue in this.props.data)) {
             dropDownList = (
                 <div className={'drop-down-list-container'}>
