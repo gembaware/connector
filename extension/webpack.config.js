@@ -28,9 +28,9 @@ module.exports = async (env, options)  => {
     resolve: {
       extensions: [".ts", ".tsx", ".html", ".js"],
     },
-    // node: {
-    //   fs: 'empty',
-    // },
+    node: {
+      fs: 'empty',
+    },
     module: {
       rules: [
         {
