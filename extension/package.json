@@ -90,5 +90,10 @@
     "jsxBracketSameLine": true,
     "arrowParens": "always",
     "singleQuote": true
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }
