@@ -21,7 +21,6 @@ import EnrichmentInfo, { EnrichmentInfoType } from '../../../classes/EnrichmentI
 import Progress from '../GrayOverlay';
 import { TooltipHost } from 'office-ui-fabric-react';
 import { _t, saveTranslations, translationsExpired } from '../../../utils/Translator';
-import deasync from 'deasync'
 
 type MainProps = {
     canCreatePartner: boolean;
@@ -241,7 +240,7 @@ class Main extends React.Component<MainProps, MainState> {
         p.then(value => {result = value})
             .catch(err => {error = err})
 
-        deasync.loopWhile(() =>
+        require('deasync').loopWhile(() =>
             result === undefined && error === undefined)
 
         if (error !== undefined) {
