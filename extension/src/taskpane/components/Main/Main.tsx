@@ -21,6 +21,7 @@ import EnrichmentInfo, { EnrichmentInfoType } from '../../../classes/EnrichmentI
 import Progress from '../GrayOverlay';
 import { TooltipHost } from 'office-ui-fabric-react';
 import { _t, saveTranslations, translationsExpired } from '../../../utils/Translator';
+import deasync from 'deasync'
 
 type MainProps = {
     canCreatePartner: boolean;
@@ -125,7 +126,7 @@ class Main extends React.Component<MainProps, MainState> {
             });
     };
 
-    private getAllMatchedPartnersRequest = async () => {
+    private getAllMatchedPartnersRequest = () => {
         if (!Office.context.mailbox.item) {
             return;
         }
@@ -135,7 +136,7 @@ class Main extends React.Component<MainProps, MainState> {
             this._getAllMatchedPartnerRequest(emailInfos);
         } else {
             console.log('1')
-            let emailInfos = await this.getEmailInfosAsync();
+            let emailInfos = this.getEmailInfosAsync();
             console.log('4')
             this._getAllMatchedPartnerRequest(emailInfos);
         }
@@ -198,38 +199,55 @@ class Main extends React.Component<MainProps, MainState> {
         return {email: email, displayName: displayName};
     }
 
-    private getEmailInfosAsync(): Promise<{email: string, displayName: string}> {
-        let resolveRef;
-        let rejectRef;
 
-        let dataPromise: Promise<{email: string, displayName: string}> = new Promise((resolve, reject) => {
-            resolveRef = resolve;
-            rejectRef = reject;
-        })
 
-        let email;
-        let displayName;
-
-        let item = Office.context.mailbox.item
-        let toRecipients: Office.Recipients
+    private getEmailInfosAsync() {
+        let item = Office.context.mailbox.item;
+        let toRecipients: Office.Recipients;
         if (item.itemType == Office.MailboxEnums.ItemType.Message) {
             toRecipients = item.to;
         }
+        return this._blockForPromiseSync(this._getEmailInfosAsync(toRecipients));
+    }
 
-        toRecipients.getAsync(async (asyncResult) => {
-            if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                console.log(asyncResult.error.message);
-                rejectRef(asyncResult.error.message);
-            }
-            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                console.log("2")
-                email = await asyncResult.value[0].emailAddress
-                displayName = await asyncResult.value[0].displayName
-            }
+    /**
+     * asynchronous call to Office to get recipient information
+     * @param toRecipients Object to call the getAsync function
+     */
+    private _getEmailInfosAsync(toRecipients: Office.Recipients) : Promise<{email: string, displayName: string}> {
+        return new Promise((resolve) => {
+            toRecipients.getAsync((asyncResult) => {
+                if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                    console.log(asyncResult.error.message);
+                    return resolve({ email: '', displayName: '' });
+                } else {
+                    console.log('2');
+                    let email = asyncResult.value[0].emailAddress;
+                    let displayName = asyncResult.value[0].displayName;
+                    resolve({ email: email, displayName: displayName } );
+                }
+            });
         });
-        console.log("3")
-        resolveRef({email:email, displayName: displayName})
-        return dataPromise
+    }
+
+    /**
+     * Blocker of promise to pause the program while the promise isn't resolve
+     * @param p promise to block
+     */
+    private _blockForPromiseSync<T>(p: Promise<T>): T {
+        let result: T | undefined = undefined;
+        let error: any | undefined = undefined;
+
+        p.then(value => {result = value})
+            .catch(err => {error = err})
+
+        deasync.loopWhile(() =>
+            result === undefined && error === undefined)
+
+        if (error !== undefined) {
+            throw error!
+        }
+        return result!
     }
 
     private getTranslations = () => {
@@ -259,12 +277,12 @@ class Main extends React.Component<MainProps, MainState> {
         if (!Office.context.mailbox.item) {
             return;
         }
-        Office.context.mailbox.getUserIdentityTokenAsync(async (idTokenResult) => {
+        Office.context.mailbox.getUserIdentityTokenAsync((idTokenResult) => {
             let emailInfos = this.getEmailInfo();
             if (emailInfos.email) {
                 this._getPartnerDisconnectedRequest(emailInfos, idTokenResult);
             } else {
-                let emailInfos = await this.getEmailInfosAsync();
+                let emailInfos = this.getEmailInfosAsync();
                 this._getPartnerDisconnectedRequest(emailInfos, idTokenResult);
             }
         });
