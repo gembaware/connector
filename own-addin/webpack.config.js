@@ -71,8 +71,8 @@ module.exports = async (env, options)  => {
               },
             },
             {
-              to: "launchevent.ts",
-              from: "./src/launchevent/launchevent.ts"
+              to: "launchevent.js",
+              from: "./src/launchevent/launchevent.js"
             },
           ]
         }
