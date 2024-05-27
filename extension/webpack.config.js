@@ -80,7 +80,7 @@ module.exports = async (env, options)  => {
             },
             {
               to:"logWhileSending.tsx",
-              from: "./src/taskpane/onsend.tsx"
+              from: "./src/taskpane/logWhileSending.tsx"
             },
           ]
         }
