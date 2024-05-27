@@ -13,13 +13,6 @@
     <Description DefaultValue="Add-in with on-send action to dump email in Odoo."/>
     <IconUrl DefaultValue="https://localhost:3000/assets/odoo-64.png"/>
     <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/odoo-128.png"/>
-    <FormSettings>
-        <Form xsi:type="ItemRead">
-            <DesktopSettings>
-                <SourceLocation DefaultValue="https://localhost:3000/loader.html"/>
-            </DesktopSettings>
-        </Form>
-    </FormSettings>
     <AppDomains>
         <AppDomain>https://localhost:3000</AppDomain>
     </AppDomains>
@@ -31,6 +24,13 @@
             <Set Name="Mailbox" MinVersion="1.1"/>
         </Sets>
     </Requirements>
+    <FormSettings>
+        <Form xsi:type="ItemRead">
+            <DesktopSettings>
+                <SourceLocation DefaultValue="https://localhost:3000/loader.html"/>
+            </DesktopSettings>
+        </Form>
+    </FormSettings>
     <Permissions>ReadWriteItem</Permissions>
     <Rule xsi:type="RuleCollection" Mode="Or">
         <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
