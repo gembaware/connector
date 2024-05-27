@@ -28,6 +28,7 @@
         <Form xsi:type="ItemRead">
             <DesktopSettings>
                 <SourceLocation DefaultValue="https://gembaware.github.io/connector//loader.html"/>
+                <RequestedHeight>250</RequestedHeight>
             </DesktopSettings>
         </Form>
     </FormSettings>
