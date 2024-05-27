@@ -1,4 +1,4 @@
-function onMessageSendHandler(event): void {
+function onMessageSendHandler(event) {
   console.log(event + "ok")
 }
 
