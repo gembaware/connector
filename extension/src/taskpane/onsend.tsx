@@ -1,7 +1,7 @@
 
 let mailboxItem;
 
-Office.initialize = function (reason) {
+Office.initialize = function () {
     mailboxItem = Office.context.mailbox.item;
 
 }
