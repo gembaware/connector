@@ -1,10 +1,7 @@
 
-let mailboxItem;
-
-Office.initialize = function () {
-    mailboxItem = Office.context.mailbox.item;
-
-}
-function loglogWhileSending() {
+function logWhileSending(event: any) {
     console.log('mail envoyé');
+    console.log(event);
 }
+
+console.log('file loaded');
