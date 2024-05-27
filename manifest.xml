@@ -130,7 +130,7 @@
       <Hosts>
         <Host xsi:type="MailHost">
           <DesktopFormFactor>
-            <FunctionFile resid="Commands.Url"/>
+            <FunctionFile resid="OnSend.Url"/>
             <ExtensionPoint xsi:type="MessageReadCommandSurface">
               <OfficeTab id="TabDefault">
                 <Group id="msgReadGroup">
@@ -182,7 +182,6 @@
                 </Group>
               </OfficeTab>
             </ExtensionPoint>
-            <FunctionFile resid="OnSend.Url"/>
             <ExtensionPoint xsi:type="Events">
               <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="logWhileSending" />
             </ExtensionPoint>
