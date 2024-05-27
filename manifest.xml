@@ -59,9 +59,9 @@
                         <!-- TODO extension point taskpane -->
                         <!-- OnMessageSend event -->
                         <ExtensionPoint xsi:type="LaunchEvent">
-                            <LauchEvents>
+                            <LaunchEvents>
                                 <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="SoftBlock" />
-                            </LauchEvents>
+                            </LaunchEvents>
                             <SourceLocation resid="WebViewRuntime.Url" />
                         </ExtensionPoint>
                     </DesktopFormFactor>
