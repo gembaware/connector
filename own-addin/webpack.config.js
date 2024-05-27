@@ -66,9 +66,13 @@ module.exports = async (env, options)  => {
               from: "./manifest.xml",
               transform(content) {
                 return content
-                  .toString()
-                  .replace(/localhost:3000/g, domain);
+                    .toString()
+                    .replace(/localhost:3000/g, domain);
               },
+            },
+            {
+              to: "launchevent.ts",
+              from: "./src/launchevent/launchevent.ts"
             },
           ]
         }
