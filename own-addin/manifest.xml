@@ -67,7 +67,7 @@
                     </DesktopFormFactor>
                 </Host>
             </Hosts>
-            <Ressources>
+            <Resources>
                 <bt:Images>
                     <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/odoo-16.png"/>
                     <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/odoo-32.png"/>
@@ -79,7 +79,7 @@
                     <bt:Url id="WebViewRuntime.Url" DefaultValue="https://localhost:3000/commands.html"/>
                     <bt:Url id="JSRuntime.Url" DefaultValue="https://localhost:3000:/launchevent.ts"/> <!-- TODO tsx ? -->
                 </bt:Urls>
-            </Ressources>
+            </Resources>
         </VersionOverrides>
     </VersionOverrides>
 </OfficeApp>
