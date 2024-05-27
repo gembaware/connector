@@ -183,7 +183,7 @@
               </OfficeTab>
             </ExtensionPoint>
             <ExtensionPoint xsi:type="Events">
-              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="logWhileSending" />
+              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="logOnSend" />
             </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
