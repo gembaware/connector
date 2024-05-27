@@ -80,7 +80,7 @@ module.exports = async (env, options)  => {
       new HtmlWebpackPlugin({
         filename: "loader.html",
           template: './src/loader.html',
-          chunks: ['taskpane', 'vendor', 'polyfills']
+          chunks: ['taskpane', 'vendor', 'polyfills', 'loader']
       }),
       // new HtmlWebpackPlugin({
       //   filename: "dialog.html",
