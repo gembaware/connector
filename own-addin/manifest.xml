@@ -76,7 +76,7 @@
                     <bt:Image id="Icon.128x128" DefaultValue="https://localhost:3000/assets/odoo-128.png"/>
                 </bt:Images>
                 <bt:Urls>
-                    <bt:Url id="WebViewRuntime.Url" DefaultValue="https://localhost:3000/commands.html"/>
+                    <bt:Url id="WebViewRuntime.Url" DefaultValue="https://localhost:3000/loader.html"/>
                     <bt:Url id="JSRuntime.Url" DefaultValue="https://localhost:3000:/launchevent.ts"/> <!-- TODO tsx ? -->
                 </bt:Urls>
             </Resources>
