@@ -1,9 +1,8 @@
-enum HttpVerb {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
+const HttpVerb = {
+    GET: 'GET',
+    POST: 'POST',
+    PUT: 'PUT',
 }
-
 
 const api = {
     baseURL: 'https://demoasoi.gembaware.dev',
