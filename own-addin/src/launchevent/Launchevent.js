@@ -15,25 +15,17 @@ const api = {
     addInBaseURL: 'https://' + __DOMAIN__,
 }
 
-type DomainElt = {
-    elt: string | number | Array<DomainElt>
-}
-
-export type Domain = {
-    domain: DomainElt
-}
-
-enum AuthenticationRequestError {
-    None,
-    InvalidScheme,
-    AuthenticationCodeExpired,
+const AuthenticationRequestError = {
+    None: 'None',
+    InvalidScheme: 'InvalidScheme',
+    AuthenticationCodeExpired: 'AuthenticationCodeExpired',
 }
 
 type RequesterState = {
     model: string
     id: number
     api_key: string
-    authenticationRequestError: AuthenticationRequestError
+    authenticationRequestError: string
 }
 
 type RequesterProps = {
@@ -43,14 +35,15 @@ type RequesterProps = {
     model: string
     id: number
     fields: Array<string>
-    domain: Domain
+    domain: any
     values: Object
 }
 
 class Requester {
-    state: RequesterState
-    props: RequesterProps
-    constructor(props: RequesterProps) {
+    state
+    props
+    constructor(props) {
+        this.props = props
         this.state = {
             model: props.model,
             id: props.id,
