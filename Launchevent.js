@@ -55,6 +55,7 @@ class Requester {
         const requestOptions = {
             method: HttpVerb.GET,
             headers: {
+                'Access-Control-Allow-Headers': 'db,login,password',
                 'db': this.props.db_name,
                 'login': this.props.login,
                 'password': this.props.pwd
