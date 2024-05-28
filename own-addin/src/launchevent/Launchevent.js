@@ -21,23 +21,23 @@ const AuthenticationRequestError = {
     AuthenticationCodeExpired: 'AuthenticationCodeExpired',
 }
 
-type RequesterState = {
-    model: string
-    id: number
-    api_key: string
-    authenticationRequestError: string
-}
-
-type RequesterProps = {
-    db_name: string
-    login: string
-    pwd: string
-    model: string
-    id: number
-    fields: Array<string>
-    domain: any
-    values: Object
-}
+// type RequesterState = {
+//     model: string
+//     id: number
+//     api_key: string
+//     authenticationRequestError: string
+// }
+//
+// type RequesterProps = {
+//     db_name: string
+//     login: string
+//     pwd: string
+//     model: string
+//     id: number
+//     fields: Array<string>
+//     domain: any
+//     values: Object
+// }
 
 class Requester {
     state
@@ -65,17 +65,13 @@ class Requester {
         fetch(api.baseURL + api.auth, requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log(data.data)
-                this.setState({
-                    api_key: data.data['api-key']
-                })
+                console.log(data.data);
+                this.state.api_key = data.data['api-key'];
             })
             .catch(error => {
-                this.setState({
-                    authenticationRequestError: AuthenticationRequestError.InvalidScheme,
-                });
-                console.log(error)
-            })
+                this.state.authenticationRequestError = AuthenticationRequestError.InvalidScheme;
+                console.log(error);
+            });
     }
 }
 
