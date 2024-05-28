@@ -12,7 +12,6 @@ const api = {
     logMail: '/mail_plugin/log_mail_content',
 
     auth: '/odoo_connect',
-    addInBaseURL: 'https://' + __DOMAIN__,
 }
 
 const AuthenticationRequestError = {
