@@ -52,32 +52,23 @@ class Requester {
     }
 
     login = () => {
-        const headers = new Headers();
-        headers.append("db", this.props.db_name);
-        headers.append("login", this.props.login);
-        headers.append("password", this.props.pwd);
+        const myHeaders = new Headers();
+        myHeaders.append("db", "gemba_demoasoi_db");
+        myHeaders.append("login", "admin");
+        myHeaders.append("password", "admin");
 
         const requestOptions = {
-            method: HttpVerb.GET,
-            headers: headers,
-            redirect: "follow",
-        }
+            method: "GET",
+            headers: myHeaders,
+            redirect: "follow"
+        };
 
-        fetch(api.baseURL + api.auth, requestOptions)
-            .then(response => {
-                console.log(response);
-                return response.json()
-            })
-            .then(data => {
-                console.log(data.data);
-                this.state.api_key = data.data['api-key'];
-            })
-            .catch(error => {
-                this.state.authenticationRequestError = AuthenticationRequestError.InvalidScheme;
-                console.log(error);
-            });
+        fetch("https://demoasoi.gembaware.dev/odoo_connect", requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.error(error));
+        }
     }
-}
 
 
 
