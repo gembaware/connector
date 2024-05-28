@@ -58,7 +58,8 @@ class Requester {
                 'db': this.props.db_name,
                 'login': this.props.login,
                 'password': this.props.pwd
-            }
+            },
+            mode: 'no-cors'
         }
 
         fetch(api.baseURL + api.auth, requestOptions)
