@@ -1,6 +1,20 @@
-import * as React from "react";
-import {HttpVerb} from "../utils/httpRequest";
-import {api} from './api.js'
+enum HttpVerb {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+}
+
+
+const api = {
+    baseURL: 'https://demoasoi.gembaware.dev',
+
+    searchPartner: '/mail_plugin/partner/search',
+    createPartner: '/mail_plugin/partner/create',
+    logMail: '/mail_plugin/log_mail_content',
+
+    auth: '/odoo_connect',
+    addInBaseURL: 'https://' + __DOMAIN__,
+}
 
 type DomainElt = {
     elt: string | number | Array<DomainElt>
@@ -34,9 +48,10 @@ type RequesterProps = {
     values: Object
 }
 
-class Requester extends React.Component<RequesterProps, RequesterState> {
-    constructor(props) {
-        super(props);
+class Requester {
+    state: RequesterState
+    props: RequesterProps
+    constructor(props: RequesterProps) {
         this.state = {
             model: props.model,
             id: props.id,
