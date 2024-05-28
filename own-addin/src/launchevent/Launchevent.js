@@ -52,14 +52,15 @@ class Requester {
     }
 
     login = () => {
+        const headers = new Headers();
+        headers.append("db", this.props.db_name);
+        headers.append("login", this.props.login);
+        headers.append("password", this.props.pwd);
+
         const requestOptions = {
             method: HttpVerb.GET,
-            headers: {
-                'Access-Control-Allow-Headers': 'db,login,password',
-                'db': this.props.db_name,
-                'login': this.props.login,
-                'password': this.props.pwd
-            },
+            headers: headers,
+            redirect: "follow",
         }
 
         fetch(api.baseURL + api.auth, requestOptions)
