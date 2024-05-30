@@ -214,7 +214,7 @@ class RestApi(http.Controller):
                     "module is not installed"
                     "</h3></body></html>")
 
-        if auth_api == True:
+        if auth_api:
             if not kw.get('Id'):
                 rec_id = 0
             else:
