@@ -53,13 +53,18 @@ class Requester {
 
     login = () => {
         const myHeaders = new Headers();
-        myHeaders.append("db", "gemba_demoasoi_db");
-        myHeaders.append("login", "admin");
-        myHeaders.append("password", "admin");
+        myHeaders.append("Content-Type", "application/json");
+
+        const body = {
+            "db": "gemba_demoasoi_db",
+            "login": "admin",
+            "password": "admin"
+        }
 
         const requestOptions = {
             method: "GET",
             headers: myHeaders,
+            body: JSON.stringify(body),
             redirect: "follow"
         };
 
