@@ -48,7 +48,7 @@ class Requester {
             id: props.id,
             api_key: undefined,
             authenticationRequestError: AuthenticationRequestError.None,
-            email_partner: undefined,
+            emailPartner: undefined,
         }
     }
 
@@ -76,6 +76,10 @@ class Requester {
         }
     }
 
+    getEmailAsync = (result) => {
+        this.state.emailPartner = result.value[0].emailAddress
+    }
+
     get_partner = () => {
 
     }
@@ -96,9 +100,7 @@ async function onMessageSendHandler(event) {
     });
 
     requester.login();
-    let emailAddress;
-    await Office.context.mailbox.item.to.getAsync((result) => {emailAddress = result.value[0].emailAddress
-        console.log(emailAddress)})
+    await Office.context.mailbox.item.to.getAsync(requester.getEmailAsync);
 
 
 }
