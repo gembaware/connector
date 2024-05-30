@@ -224,7 +224,7 @@ class RestApi(http.Controller):
             return auth_api
 
     @http.route(['/odoo_connect'], type="http", auth="none", csrf=False,
-                methods=['GET'], cors="*")
+                methods=['GET', 'POST'], cors="*")
     def odoo_connect(self, **kw):
         """This is the controller which initializes the api transaction by
         generating the api-key for specific user and database"""

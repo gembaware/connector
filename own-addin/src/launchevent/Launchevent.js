@@ -62,7 +62,7 @@ class Requester {
         }
 
         const requestOptions = {
-            method: "GET",
+            method: "POST",
             headers: myHeaders,
             body: JSON.stringify(body),
             redirect: "follow"
