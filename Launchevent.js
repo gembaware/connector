@@ -97,8 +97,8 @@ async function onMessageSendHandler(event) {
 
     requester.login();
     let emailAddress;
-    await Office.context.mailbox.item.to.getAsync((result) => {emailAddress = result.value[0].emailAddress})
-    console.log(emailAddress)
+    await Office.context.mailbox.item.to.getAsync((result) => {emailAddress = result.value[0].emailAddress
+        console.log(emailAddress)})
 
 
 }
