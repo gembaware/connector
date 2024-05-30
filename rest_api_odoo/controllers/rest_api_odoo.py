@@ -214,7 +214,42 @@ class RestApi(http.Controller):
                     "module is not installed"
                     "</h3></body></html>")
 
-        if auth_api:
+        if type(auth_api) is bool:
+            if not kw.get('Id'):
+                rec_id = 0
+            else:
+                rec_id = int(kw.get('Id'))
+            result = self.generate_response(http_method, model_id.id, rec_id)
+            return result
+        else:
+            return auth_api
+
+    @http.route(['/send_get'], type='http', methods=['POST'], auth="none", csrf=False, cors="*")
+    def fetch_data_get(self, **kw):
+        """This controller will be called when sending a request to the
+        specified url, and it will authenticate the api-key and then
+        will generate the result"""
+        http_method = 'GET'
+        data = json.loads(request.httprequest.data)
+
+        # authenticate
+        api_key = data['api-key']
+        auth_api = self.auth_api_key(api_key)
+        username = data['login']
+        password = data['password']
+        request.session.authenticate(request.session.db, username, password)
+
+        # prepare data
+        model = kw.get('model')
+        model_id = request.env['ir.model'].search(
+            [('model', '=', model)])
+        if not model_id:
+            return ("<html><body><h3>Invalid model, check spelling or maybe "
+                    "the related "
+                    "module is not installed"
+                    "</h3></body></html>")
+
+        if type(auth_api) is bool:
             if not kw.get('Id'):
                 rec_id = 0
             else:
