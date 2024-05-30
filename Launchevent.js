@@ -7,7 +7,7 @@ const HttpVerb = {
 const api = {
     baseURL: 'https://demoasoi.gembaware.dev',
 
-    searchPartner: '/mail_plugin/partner/search',
+    searchPartner: '/send_get',
     createPartner: '/mail_plugin/partner/create',
     logMail: '/mail_plugin/log_mail_content',
 
@@ -76,20 +76,33 @@ class Requester {
         this.state.api_key = await JSON.parse(result).api_key
         console.log(this.state.api_key)
         return true
-        // fetch("https://demoasoi.gembaware.dev/odoo_connect", requestOptions)
-        //     .then((response) => response.text())
-        //     .then((result) => {
-        //         console.log(result)
-        //         this.state.api_key = JSON.parse(result).api_key
-        //         console.log(this.state.api_key)
-        //     })
-        //     .catch((error) => console.error(error));
-        // }
     }
 
     setEmail = (email) => {
         this.state.emailPartner = email
         console.log(email)
+    }
+
+    getPartner = async () => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${this.state.api_key}`);
+
+        const body = {
+            "email": this.state.emailPartner
+        }
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: JSON.stringify(body),
+            redirect: "follow"
+        };
+
+        const response = await fetch("https://demoasoi.gembaware.dev/mail_plugin/partner/search", requestOptions)
+        const result = await response.text()
+        console.log(result)
+        return true
     }
 
 }
@@ -109,9 +122,9 @@ async function onMessageSendHandler(event) {
 
     const res = await requester.login();
     if (res) {
-        requester.setEmail();
         await Office.context.mailbox.item.to.getAsync((result) => {
             requester.setEmail(result.value[0].emailAddress)
+            requester.getPartner()
         })
     }
 
