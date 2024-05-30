@@ -41,6 +41,7 @@ const AuthenticationRequestError = {
 class Requester {
     state
     props
+
     constructor(props) {
         this.props = props
         this.state = {
@@ -52,7 +53,7 @@ class Requester {
         }
     }
 
-    login = () => {
+    login = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -69,22 +70,28 @@ class Requester {
             redirect: "follow"
         };
 
-        fetch("https://demoasoi.gembaware.dev/odoo_connect", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-        }
+        const response = await fetch("https://demoasoi.gembaware.dev/odoo_connect", requestOptions)
+        const result = await response.text()
+        console.log(result)
+        this.state.api_key = await JSON.parse(result).api_key
+        console.log(this.state.api_key)
+        return true
+        // fetch("https://demoasoi.gembaware.dev/odoo_connect", requestOptions)
+        //     .then((response) => response.text())
+        //     .then((result) => {
+        //         console.log(result)
+        //         this.state.api_key = JSON.parse(result).api_key
+        //         console.log(this.state.api_key)
+        //     })
+        //     .catch((error) => console.error(error));
+        // }
     }
 
-    getEmailAsync = (result) => {
-        this.state.emailPartner = result.value[0].emailAddress
+    setEmail = (email) => {
+        this.state.emailPartner = email
     }
 
-    get_partner = () => {
-
-    }
-
-
+}
 
 async function onMessageSendHandler(event) {
     console.log(event + "ok")
@@ -99,8 +106,13 @@ async function onMessageSendHandler(event) {
         values: {},
     });
 
-    requester.login();
-    await Office.context.mailbox.item.to.getAsync(requester.getEmailAsync);
+    const res = await requester.login();
+    if (res) {
+        requester.setEmail();
+        await Office.context.mailbox.item.to.getAsync((result) => {
+            requester.setEmail(result.value[0].emailAddress)
+        })
+    }
 
 
 }
