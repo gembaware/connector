@@ -198,11 +198,12 @@ class RestApi(http.Controller):
         specified url, and it will authenticate the api-key and then will
         generate the result"""
         http_method = request.httprequest.method
-        api_key = request.httprequest.headers.get('api-key')
+        data = json.loads(request.httprequest.data)
+        api_key = data['api-key']
         auth_api = self.auth_api_key(api_key)
         model = kw.get('model')
-        username = request.httprequest.headers.get('login')
-        password = request.httprequest.headers.get('password')
+        username = data['login']
+        password = data['password']
         request.session.authenticate(request.session.db, username,
                                      password)
         model_id = request.env['ir.model'].search(
@@ -228,21 +229,8 @@ class RestApi(http.Controller):
     def odoo_connect(self, **kw):
         """This is the controller which initializes the api transaction by
         generating the api-key for specific user and database"""
-
-        # http_method = request.httprequest.method
-        # if http_method == 'OPTIONS':
-        #     return request.make_response(data=json.dumps({"status": 204}),
-        #                                  headers={"Access-Control-Allow-Origin": "*",
-        #                                           "Access-Control-Allow-Methods": "GET, OPTIONS",
-        #                                           "Access-Control-Allow-Headers": "Content-Type, api-key, login, "
-        #                                                                           "password, db"
-        #                                           }
-        #                                  )
-
+        # get body datas
         data = json.loads(request.httprequest.data)
-        _logger.warning("data: %s", str(data))
-
-        # _logger.warning("username: %s, password: %s, db: %s", str(data['login']), str(data['password']), str(data['db']))
         try:
             request.session.update(http.get_default_session(), db=data['db'])
             auth = request.session.authenticate(request.session.db, data['login'],
