@@ -47,7 +47,8 @@ class Requester {
             model: props.model,
             id: props.id,
             api_key: undefined,
-            authenticationRequestError: AuthenticationRequestError.None
+            authenticationRequestError: AuthenticationRequestError.None,
+            email_partner: undefined,
         }
     }
 
@@ -75,11 +76,15 @@ class Requester {
         }
     }
 
+    get_partner = () => {
+
+    }
+
 
 
 async function onMessageSendHandler(event) {
     console.log(event + "ok")
-    new Requester({
+    const requester = new Requester({
         db_name: 'gemba_demoasoi_db',
         login: 'admin',
         pwd: 'admin',
@@ -88,7 +93,12 @@ async function onMessageSendHandler(event) {
         fields: [],
         domain: [],
         values: {},
-    }).login();
+    });
+
+    requester.login();
+    console.log(Office.context.mailbox.item.to.at(0).emailAddress)
+
+
 }
 
 Office.initialize = () => {
