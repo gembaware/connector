@@ -96,8 +96,8 @@ async function onMessageSendHandler(event) {
     });
 
     requester.login();
-    const recipients = Office.context.mailbox.item.to[0].emailAddress
-    console.log(recipients)
+    const recipient = await Office.context.mailbox.item.to[0]
+    console.log(recipient.emailAddress)
 
 
 }
