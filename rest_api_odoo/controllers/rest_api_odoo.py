@@ -239,7 +239,7 @@ class RestApi(http.Controller):
             api_key = request.env.user.generate_api(data['login'])
             datas = json.dumps({"Status": "auth successful",
                                 "User": user.name,
-                                "api-key": api_key})
+                                "api_key": api_key})
             return request.make_response(data=datas)
         except:
             return ("<html><body><h2>wrong login credentials"
