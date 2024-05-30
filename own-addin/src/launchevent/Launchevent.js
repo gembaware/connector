@@ -89,6 +89,7 @@ class Requester {
 
     setEmail = (email) => {
         this.state.emailPartner = email
+        console.log(email)
     }
 
 }
