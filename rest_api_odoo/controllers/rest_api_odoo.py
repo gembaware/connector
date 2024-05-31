@@ -198,6 +198,7 @@ class RestApi(http.Controller):
         specified url, and it will authenticate the api_key and then will
         generate the result"""
         http_method = request.httprequest.method
+        _logger.warning(str(request.httprequest.data))
         data = json.loads(request.httprequest.data)
         api_key = data['api_key']
         auth_api = self.auth_api_key(api_key)
