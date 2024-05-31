@@ -192,7 +192,7 @@ class RestApi(http.Controller):
 
     @http.route(['/send_request'], type='http',
                 auth='none',
-                methods=['GET', 'POST', 'PUT', 'DELETE'], csrf=False)
+                methods=['GET', 'POST', 'PUT', 'DELETE'], csrf=False, cors="*")
     def fetch_data(self, **kw):
         """This controller will be called when sending a request to the
         specified url, and it will authenticate the api_key and then will
