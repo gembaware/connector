@@ -49,11 +49,11 @@
             </Requirements>
             <Hosts>
                 <Host xsi:type="MailHost">
-<!--                    <Runtimes>-->
-<!--                        <Runtime resid="WebViewRuntime.Url">-->
-<!--                            <Override type="javascript" resid="JSRuntime.Url"/>-->
-<!--                        </Runtime>-->
-<!--                    </Runtimes>-->
+                    <Runtimes>
+                        <Runtime resid="WebViewRuntime.Url">
+                            <Override type="javascript" resid="JSRuntime.Url"/>
+                        </Runtime>
+                    </Runtimes>
                     <DesktopFormFactor>
                         <FunctionFile resid="WebViewRuntime.Url"/>
                         <!-- TODO extension point taskpane -->
