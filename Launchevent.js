@@ -113,9 +113,8 @@ class Requester {
 
         const response = await fetch(api.baseURL + api.searchPartner + "?model=" + this.props.model, requestOptions)
         const result = await response.text()
-        console.log(result)
         const records = await JSON.parse(result).records
-        if (!records) { // TODO tester
+        if (records.length === 0) { // TODO tester
             console.log("no partner found")
             alert("No partner found, creation")
             let res = await this.createPartner();
