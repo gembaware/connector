@@ -100,7 +100,7 @@ class Requester {
             redirect: "follow"
         };
 
-        const response = await fetch(api.baseURL + api.getPartner, requestOptions)
+        const response = await fetch(api.baseURL + api.searchPartner, requestOptions)
         const result = await response.text()
         console.log(result)
         return true
