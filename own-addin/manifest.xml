@@ -55,7 +55,7 @@
                         </Runtime>
                     </Runtimes>
                     <DesktopFormFactor>
-                        <FunctionFile resid="Commands.Url"/>
+                        <FunctionFile resid="JSRuntime.Url"/>
                         <!-- TODO extension point taskpane -->
                         <!-- OnMessageSend event -->
                         <ExtensionPoint xsi:type="LaunchEvent">
@@ -63,6 +63,28 @@
                                 <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="SoftBlock" />
                             </LaunchEvents>
                             <SourceLocation resid="WebViewRuntime.Url" />
+                        </ExtensionPoint>
+                        <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+                            <OfficeTab id="TabDefault">
+                                <Group id="msgComposeCmdGroup">
+                                    <Label resid="GroupLabel"/>
+                                    <Control xsi:type="Button" id="msgComposeLogMail">
+                                        <Label resid="TaskpaneButton.Label"/>
+                                        <Supertip>
+                                            <Title resid="TaskpaneButton.Title"/>
+                                            <Description resid="TaskpaneButton.Tooltip"/>
+                                        </Supertip>
+                                        <Icon>
+                                            <bt:Image size="16" resid="Icon.16x16"/>
+                                            <bt:Image size="32" resid="Icon.32x32"/>
+                                            <bt:Image size="80" resid="Icon.80x80"/>
+                                        </Icon>
+                                        <Action xsi:type="ExecuteFunction">
+                                            <FunctionName>onMessageSendHandler</FunctionName>
+                                        </Action>
+                                    </Control>
+                                </Group>
+                            </OfficeTab>
                         </ExtensionPoint>
                     </DesktopFormFactor>
                 </Host>
