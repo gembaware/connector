@@ -110,6 +110,8 @@ class Requester {
         const response = await fetch(api.baseURL + api.searchPartner + "?model=res.partner", requestOptions)
         const result = await response.text()
         console.log(result)
+        this.state.idPartner = await JSON.parse(result)[0].id
+        console.log(this.state.idPartner)
         return true
     }
 
