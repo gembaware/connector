@@ -116,9 +116,14 @@ class Requester {
         const records = await JSON.parse(result).records
         if (records.length === 0) { // TODO tester
             console.log("no partner found, creation")
-            let res = await this.createPartner();
+            const createFields = ["name", "email"]
+            const createValues = {
+                "name": this.state.namePartner,
+                "email": this.state.emailPartner,
+            }
+            let res = await this.createPartner(createFields, createValues);
             if (res) {
-                return await this.getIdPartner()
+                return await this.getIdPartner(fields, domain)
             } else {
                 return false
             }
