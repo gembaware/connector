@@ -49,21 +49,21 @@
             </Requirements>
             <Hosts>
                 <Host xsi:type="MailHost">
-                    <Runtimes>
-                        <Runtime resid="WebViewRuntime.Url">
-                            <Override type="javascript" resid="JSRuntime.Url"/>
-                        </Runtime>
-                    </Runtimes>
+<!--                    <Runtimes>-->
+<!--                        <Runtime resid="WebViewRuntime.Url">-->
+<!--                            <Override type="javascript" resid="JSRuntime.Url"/>-->
+<!--                        </Runtime>-->
+<!--                    </Runtimes>-->
                     <DesktopFormFactor>
                         <FunctionFile resid="WebViewRuntime.Url"/>
                         <!-- TODO extension point taskpane -->
                         <!-- OnMessageSend event -->
-                        <ExtensionPoint xsi:type="LaunchEvent">
-                            <LaunchEvents>
-                                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="SoftBlock" />
-                            </LaunchEvents>
-                            <SourceLocation resid="WebViewRuntime.Url" />
-                        </ExtensionPoint>
+<!--                        <ExtensionPoint xsi:type="LaunchEvent">-->
+<!--                            <LaunchEvents>-->
+<!--                                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="SoftBlock" />-->
+<!--                            </LaunchEvents>-->
+<!--                            <SourceLocation resid="WebViewRuntime.Url" />-->
+<!--                        </ExtensionPoint>-->
                         <ExtensionPoint xsi:type="MessageComposeCommandSurface">
                             <OfficeTab id="TabDefault">
                                 <Group id="msgComposeCmdGroup">
@@ -81,7 +81,6 @@
                                         </Icon>
                                         <Action xsi:type="ExecuteFunction">
                                             <FunctionName>onMessageSendHandler</FunctionName>
-                                            <SupportsPinning>true</SupportsPinning>
                                         </Action>
                                     </Control>
                                 </Group>
