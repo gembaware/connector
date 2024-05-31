@@ -118,7 +118,7 @@ class RestApi(http.Controller):
                         domain=[('id', '=', new_resource.id)],
                         fields=fields
                     )
-                    new_data = json.dumps({'New resource': partner_records, })
+                    new_data = json.dumps({'created_record': partner_records, })
                     datas.append(new_data)
                     return request.make_response(data=datas)
                 except:
@@ -156,7 +156,7 @@ class RestApi(http.Controller):
                     fields=fields
                 )
                 new_data = json.dumps(
-                    {'Updated resource': partner_records,
+                    {'updated_records': partner_records,
                      })
                 datas.append(new_data)
                 return request.make_response(data=datas)
@@ -185,7 +185,7 @@ class RestApi(http.Controller):
                             fields=['id', 'display_name']
                         )
                         remove = json.dumps(
-                            {"Resource deleted": records,
+                            {"deleted_records": records,
                              })
                         resource.unlink()
                         return request.make_response(data=remove)

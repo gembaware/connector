@@ -10,7 +10,7 @@ const api = {
     baseURL: 'https://demoasoi.gembaware.dev',
 
     searchPartner: '/send_get',
-    createPartner: '/mail_plugin/partner/create',
+    requests: '/send_request',
     logMail: '/mail_plugin/log_mail_content',
 
     auth: '/odoo_connect',
@@ -52,6 +52,7 @@ class Requester {
             api_key: undefined,
             authenticationRequestError: AuthenticationRequestError.None,
             emailPartner: undefined,
+            namePartner: undefined,
             idPartner: undefined,
         }
     }
@@ -86,7 +87,12 @@ class Requester {
         console.log(email)
     }
 
-    getIdPartner = async () => {
+    setName = (name) => {
+        this.state.namePartner = name
+        console.log(name)
+    }
+
+    getIdPartner = async (fields, domain) => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -94,10 +100,8 @@ class Requester {
             "login": this.props.login,
             "password": this.props.pwd,
             "api_key": this.state.api_key,
-            "fields": ["id"],
-            "domain": [
-                ["email", "=", this.state.emailPartner]
-            ]
+            "fields": fields,
+            "domain": domain,
         }
 
         const requestOptions = {
@@ -107,16 +111,50 @@ class Requester {
             redirect: "follow"
         };
 
-        const response = await fetch(api.baseURL + api.searchPartner + "?model=res.partner", requestOptions)
+        const response = await fetch(api.baseURL + api.searchPartner + "?model=" + this.props.model, requestOptions)
         const result = await response.text()
         console.log(result)
-        this.state.idPartner = await JSON.parse(result).records[0].id
-        console.log(this.state.idPartner)
-        return true
+        const records = await JSON.parse(result).records
+        if (records.length === 0) { // TODO tester
+            console.log("no partner found")
+            alert("No partner found, creation")
+            let res = await this.createPartner();
+            if (res) {
+                return await this.getIdPartner()
+            } else {
+                return false
+            }
+        } else {
+            this.state.idPartner = records[0].id
+            console.log(this.state.idPartner)
+            return true
+        }
     }
 
-    // createPartner = async () => {
-    // }
+    createPartner = async (fields, values) => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const body = {
+            "login": this.props.login,
+            "password": this.props.pwd,
+            "api_key": this.state.api_key,
+            "fields": fields,
+            "values": values,
+        };
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: body,
+          redirect: "follow"
+        };
+
+        const response = await fetch(api.baseURL + api.requests + "?model=" + this.props.model, requestOptions)
+        const result = response.text()
+        console.log(result)
+        return true
+    }
 
 }
 
@@ -126,18 +164,22 @@ async function onMessageSendHandler(event) {
         db_name: 'gemba_demoasoi_db',
         login: 'admin',
         pwd: 'admin',
-        model: '',
+        model: 'res.partner',
         id: 0,
-        fields: [],
-        domain: [],
-        values: {},
     });
 
-    const res = await requester.login();
+    let res = await requester.login();
     if (res) {
-        await Office.context.mailbox.item.to.getAsync((result) => {
+        await Office.context.mailbox.item.to.getAsync(async (result) => {
             requester.setEmail(result.value[0].emailAddress)
-            requester.getIdPartner()
+            requester.setName(result.value[0].displayName)
+            const domain = [
+                ["email", "=", requester.state.emailPartner]
+            ]
+            res = await requester.getIdPartner(["id"], domain)
+            if (res) {
+                // TODO Descendre le mail
+            }
         })
     }
 
