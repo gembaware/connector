@@ -50,6 +50,7 @@ class Requester {
             api_key: undefined,
             authenticationRequestError: AuthenticationRequestError.None,
             emailPartner: undefined,
+            idPartner: undefined,
         }
     }
 
@@ -70,7 +71,7 @@ class Requester {
             redirect: "follow"
         };
 
-        const response = await fetch("https://demoasoi.gembaware.dev/odoo_connect", requestOptions)
+        const response = await fetch(api.baseURL + api.auth, requestOptions)
         const result = await response.text()
         console.log(result)
         this.state.api_key = await JSON.parse(result).api_key
@@ -83,7 +84,7 @@ class Requester {
         console.log(email)
     }
 
-    getPartner = async () => {
+    getEmailPartner = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", `Bearer ${this.state.api_key}`);
@@ -99,11 +100,14 @@ class Requester {
             redirect: "follow"
         };
 
-        const response = await fetch("https://demoasoi.gembaware.dev/mail_plugin/partner/search", requestOptions)
+        const response = await fetch(api.baseURL + api.getPartner, requestOptions)
         const result = await response.text()
         console.log(result)
         return true
     }
+
+    // createPartner = async () => {
+    // }
 
 }
 
@@ -124,7 +128,7 @@ async function onMessageSendHandler(event) {
     if (res) {
         await Office.context.mailbox.item.to.getAsync((result) => {
             requester.setEmail(result.value[0].emailAddress)
-            requester.getPartner()
+            requester.getEmailPartner()
         })
     }
 
