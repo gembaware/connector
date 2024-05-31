@@ -199,7 +199,7 @@ class RestApi(http.Controller):
         generate the result"""
         http_method = request.httprequest.method
         data = json.loads(request.httprequest.data)
-        api_key = data['api-key']
+        api_key = data['api_key']
         auth_api = self.auth_api_key(api_key)
         model = kw.get('model')
         username = data['login']
