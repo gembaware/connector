@@ -28,9 +28,9 @@
                 </header>
                 <sheet>
                     <group>
-                        <h1>
-                            <field name="destinataire"/>
-                        </h1>
+                        <field name="destinataire"/>
+                    </group>
+                    <group>
                         <field name="date_mail"/>
                     </group>
                     <field name="body" widget="html"/>
