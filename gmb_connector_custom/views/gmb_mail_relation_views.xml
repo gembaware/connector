@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gmb_mail_relation_action" model="ir.actions.act_window">
+        <field name="name">Mails</field>
+        <field name="res_model">gmb.mail.relation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="gmb_mail_relation_view_tree" model="ir.iu.view">
+        <field name="name">gmb.mail.relation.tree</field>
+        <field name="model">gmb.mail.relation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_mail"/>
+                <field name="destinataire"/>
+                <field name="body"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="gmb_mail_relation_view_form" model="ir.ui.view">
+        <field name="name">gmb.mail.relation.form</field>
+        <field name="model">gmb.mail.relation</field>
+        <field name="arch" type="xml">
+            <form name="mail_relation">
+                <header>
+                    <button name="action_MER" string="Analyser" type="object"/>
+                </header>
+                <sheet>
+                    <group>
+                        <h1>
+                            <field name="destinataire"/>
+                        </h1>
+                        <field name="date_mail"/>
+                    </group>
+                    <field name="body" widget="html"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gmb_mail_relation_view_search" model="ir.ui.view">
+        <field name="name">gmb.mail.relation.search</field>
+        <field name="model">gmb.mail.relation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="destinataire"/>
+                <field name="date_mail"/>
+            </search>
+        </field>
+    </record>
+</odoo>

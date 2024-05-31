@@ -11,6 +11,7 @@
     ],
     'data': [
         'views/mail_message_views.xml',
+        'views/gmb_mail_relation_views.xml'
     ],
     'installable': True,
     'license': 'LGPL-3',
