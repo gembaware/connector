@@ -61,9 +61,9 @@ class Requester {
         myHeaders.append("Content-Type", "application/json");
 
         const body = {
-            "db": "gemba_demoasoi_db",
-            "login": "admin",
-            "password": "admin"
+            "db": this.props.db_name,
+            "login": this.props.login,
+            "password": this.props.pwd
         }
 
         const requestOptions = {
@@ -86,13 +86,18 @@ class Requester {
         console.log(email)
     }
 
-    getEmailPartner = async () => {
+    getIdPartner = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", `Bearer ${this.state.api_key}`);
 
         const body = {
-            "email": this.state.emailPartner
+            "login": this.props.login,
+            "password": this.props.pwd,
+            "api_key": this.state.api_key,
+            "fields": ["id"],
+            "domain": [
+                ["email", "=", this.state.emailPartner]
+            ]
         }
 
         const requestOptions = {
@@ -102,7 +107,7 @@ class Requester {
             redirect: "follow"
         };
 
-        const response = await fetch(api.baseURL + api.searchPartner, requestOptions)
+        const response = await fetch(api.baseURL + api.searchPartner + "?model=res.partner", requestOptions)
         const result = await response.text()
         console.log(result)
         return true
