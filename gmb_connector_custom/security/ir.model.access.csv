@@ -1,3 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gmb_mail_relation,access_gmb_mise_en_relation,model_gmb_mise_en_relation,base.group_user,1,1,1,1
-access_gmb_mise_en_relation,access_gmb_mail_relation,model_gmb_mail_relation,base.group_user,1,1,1,1
+access_gmb_mise_en_relation,access_gmb_mise_en_relation,model_gmb_mise_en_relation,base.group_user,1,1,1,1
+access_gmb_mail_relation,access_gmb_mail_relation,model_gmb_mail_relation,base.group_user,1,1,1,1
