@@ -32,7 +32,7 @@ class RestApi(http.Controller):
     api requests"""
 
     def auth_api_key(self, api_key):
-        """This function is used to authenticate the api-key when sending a
+        """This function is used to authenticate the api_key when sending a
         request"""
         user_id = request.env['res.users'].sudo().search([('api_key', '=', api_key)])
         if api_key is not None and user_id:
@@ -195,7 +195,7 @@ class RestApi(http.Controller):
                 methods=['GET', 'POST', 'PUT', 'DELETE'], csrf=False)
     def fetch_data(self, **kw):
         """This controller will be called when sending a request to the
-        specified url, and it will authenticate the api-key and then will
+        specified url, and it will authenticate the api_key and then will
         generate the result"""
         http_method = request.httprequest.method
         data = json.loads(request.httprequest.data)
@@ -227,13 +227,13 @@ class RestApi(http.Controller):
     @http.route(['/send_get'], type='http', methods=['POST'], auth="none", lang="fr", csrf=False, cors="*")
     def fetch_data_get(self, **kw):
         """This controller will be called when sending a request to the
-        specified url, and it will authenticate the api-key and then
+        specified url, and it will authenticate the api_key and then
         will generate the result"""
         http_method = 'GET'
         data = json.loads(request.httprequest.data)
 
         # authenticate
-        api_key = data['api-key']
+        api_key = data['api_key']
         auth_api = self.auth_api_key(api_key)
         username = data['login']
         password = data['password']
@@ -263,7 +263,7 @@ class RestApi(http.Controller):
                 methods=['GET', 'POST'], cors="*")
     def odoo_connect(self, **kw):
         """This is the controller which initializes the api transaction by
-        generating the api-key for specific user and database"""
+        generating the api_key for specific user and database"""
         # get body datas
         data = json.loads(request.httprequest.data)
         try:
