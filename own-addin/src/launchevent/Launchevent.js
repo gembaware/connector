@@ -145,7 +145,7 @@ class Requester {
             "fields": fields,
             "values": values,
         };
-
+        console.log(body)
         const requestOptions = {
           method: "POST",
           headers: myHeaders,
