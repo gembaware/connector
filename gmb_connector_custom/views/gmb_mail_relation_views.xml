@@ -6,7 +6,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record id="gmb_mail_relation_view_tree" model="ir.iu.view">
+    <record id="gmb_mail_relation_view_tree" model="ir.ui.view">
         <field name="name">gmb.mail.relation.tree</field>
         <field name="model">gmb.mail.relation</field>
         <field name="arch" type="xml">

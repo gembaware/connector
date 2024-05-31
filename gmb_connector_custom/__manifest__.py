@@ -10,6 +10,7 @@
         'mail_plugin',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/mail_message_views.xml',
         'views/gmb_mail_relation_views.xml'
     ],

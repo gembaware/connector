@@ -13,8 +13,8 @@ class GmbMailRelation(models.Model):
     # TODO peut etre mettre le sujet
 
     # model methods
-    def create(self):
-        pass
+    # def create(self):
+    #     pass
 
-    def manual_MER(self):
-        pass
+    def action_MER(self):
+        return True
