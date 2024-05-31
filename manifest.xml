@@ -55,7 +55,7 @@
                         </Runtime>
                     </Runtimes>
                     <DesktopFormFactor>
-                        <FunctionFile resid="JSRuntime.Url"/>
+                        <FunctionFile resid="Commands.Url"/>
                         <!-- TODO extension point taskpane -->
                         <!-- OnMessageSend event -->
                         <ExtensionPoint xsi:type="LaunchEvent">
