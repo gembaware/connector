@@ -135,7 +135,7 @@ async function onMessageSendHandler(event) {
     if (res) {
         await Office.context.mailbox.item.to.getAsync((result) => {
             requester.setEmail(result.value[0].emailAddress)
-            requester.getEmailPartner()
+            requester.getIdPartner()
         })
     }
 
