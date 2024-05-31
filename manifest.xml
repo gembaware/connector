@@ -55,7 +55,7 @@
                         </Runtime>
                     </Runtimes>
                     <DesktopFormFactor>
-                        <FunctionFile resid="Commands.Url"/>
+                        <FunctionFile resid="WebViewRuntime.Url"/>
                         <!-- TODO extension point taskpane -->
                         <!-- OnMessageSend event -->
                         <ExtensionPoint xsi:type="LaunchEvent">
