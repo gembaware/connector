@@ -81,6 +81,7 @@
                                         </Icon>
                                         <Action xsi:type="ExecuteFunction">
                                             <FunctionName>onMessageSendHandler</FunctionName>
+                                            <SupportsPinning>true</SupportsPinning>
                                         </Action>
                                     </Control>
                                 </Group>
