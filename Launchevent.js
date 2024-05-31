@@ -115,8 +115,7 @@ class Requester {
         const result = await response.text()
         const records = await JSON.parse(result).records
         if (records.length === 0) { // TODO tester
-            console.log("no partner found")
-            alert("No partner found, creation")
+            console.log("no partner found, creation")
             let res = await this.createPartner();
             if (res) {
                 return await this.getIdPartner()
