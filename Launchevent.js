@@ -51,9 +51,11 @@ class Requester {
             id: props.id,
             api_key: undefined,
             authenticationRequestError: AuthenticationRequestError.None,
+            dateEmail: Date.now(),
             emailPartner: undefined,
             namePartner: undefined,
             idPartner: undefined,
+            mailContent: undefined,
         }
     }
 
@@ -92,6 +94,10 @@ class Requester {
         console.log(name)
     }
 
+    setMailContent = (mailContent) => {
+        this.state.mailContent = mailContent
+    }
+
     getIdPartner = async (fields, domain) => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -111,7 +117,8 @@ class Requester {
             redirect: "follow"
         };
 
-        const response = await fetch(api.baseURL + api.searchPartner + "?model=" + this.props.model, requestOptions)
+        const response =
+            await fetch(api.baseURL + api.searchPartner + "?model=" + this.state.model, requestOptions)
         const result = await response.text()
         const records = await JSON.parse(result).records
         if (records.length === 0) { // TODO tester
@@ -121,7 +128,7 @@ class Requester {
                 "name": this.state.namePartner,
                 "email": this.state.emailPartner,
             }
-            let res = await this.createPartner(createFields, createValues);
+            let res = await this.create(createFields, createValues);
             if (res) {
                 return await this.getIdPartner(fields, domain)
             } else {
@@ -134,7 +141,7 @@ class Requester {
         }
     }
 
-    createPartner = async (fields, values) => {
+    create = async (fields, values) => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -147,22 +154,24 @@ class Requester {
         };
 
         const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: JSON.stringify(body),
-          redirect: "follow"
+            method: "POST",
+            headers: myHeaders,
+            body: JSON.stringify(body),
+            redirect: "follow"
         };
 
-        const response = await fetch(api.baseURL + api.requests + "?model=" + this.props.model, requestOptions)
-        const result = response.text()
+
+        const response =
+            await fetch(api.baseURL + api.requests + "?model=" + this.state.model, requestOptions)
+        const result = await response.text()
         console.log(result)
         return true
     }
-
 }
 
 async function onMessageSendHandler(event) {
     console.log(event + "ok")
+    // TODO check if the module are whitelisted by the API
     const requester = new Requester({
         db_name: 'gemba_demoasoi_db',
         login: 'admin',
@@ -181,12 +190,23 @@ async function onMessageSendHandler(event) {
             ]
             res = await requester.getIdPartner(["id"], domain)
             if (res) {
-                // TODO Descendre le mail
+                requester.state.model = "gmb.mail.relation"
+                await Office.context.mailbox.item.body.getAsync(async (result) => {
+                    requester.setMailContent(result.value.split('<div id="x_appendonsend"></div>')[0]) // remove the history and keep only the most recent message
+                    const fields = ["date_mail", "destinataire", "body"]
+                    const values = {
+                        "date_mail": requester.state.dateEmail,
+                        "destinataire": requester.state.idPartner,
+                        "body": requester.state.mailContent,
+                    }
+                    res = await requester.create(fields, values)
+                    if (res) {
+                        console.log("Mail logged")
+                    }
+                })
             }
         })
     }
-
-
 }
 
 Office.initialize = () => {
