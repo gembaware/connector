@@ -78,10 +78,6 @@ module.exports = async (env, options)  => {
                   .replace(/localhost:3000/g, domain);
               },
             },
-            {
-              to:"logWhileSending.tsx",
-              from: "./src/taskpane/logWhileSending.tsx"
-            },
           ]
         }
       ),

@@ -130,7 +130,7 @@
       <Hosts>
         <Host xsi:type="MailHost">
           <DesktopFormFactor>
-            <FunctionFile resid="OnSend.Url"/>
+            <FunctionFile resid="Commands.Url"/>
             <ExtensionPoint xsi:type="MessageReadCommandSurface">
               <OfficeTab id="TabDefault">
                 <Group id="msgReadGroup">
@@ -182,9 +182,6 @@
                 </Group>
               </OfficeTab>
             </ExtensionPoint>
-            <ExtensionPoint xsi:type="Events">
-              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="logOnSend" />
-            </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
       </Hosts>
@@ -198,7 +195,6 @@
         </bt:Images>
         <bt:Urls>
           <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
-          <bt:Url id="OnSend.Url" DefaultValue="https://localhost:3000/onsend.tsx"
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="Odoo for Outlook"/>
