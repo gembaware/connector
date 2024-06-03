@@ -105,12 +105,12 @@
       <Hosts>
         <Host xsi:type="MailHost">
           <Runtimes>
-            <Runtime resid="Taskpane.Url">
+            <Runtime resid="WebViewRuntime.Url">
               <Override type="javascript" resid="JSRuntime.Url"/>
             </Runtime>
           </Runtimes>
           <DesktopFormFactor>
-            <FunctionFile resid="Taskpane.Url"/>
+            <FunctionFile resid="WebViewRuntime.Url"/>
             <ExtensionPoint xsi:type="MessageReadCommandSurface">
               <OfficeTab id="TabDefault">
                 <Group id="msgReadGroup">
@@ -172,6 +172,7 @@
         </bt:Images>
         <bt:Urls>
           <bt:Url id="Taskpane.Url" DefaultValue="https://gembaware.github.io/connector//taskpane.html"/>
+          <bt:Url id="WebViewRuntime.Url" DefaultValue="https://gembaware.github.io/connector//loader.html"/>
           <bt:Url id="JSRuntime.Url" DefaultValue="https://gembaware.github.io/connector//ComposeMailLogger.js"/>
         </bt:Urls>
         <bt:ShortStrings>
