@@ -196,13 +196,13 @@ async function onMessageSendHandler(event) {
                         if (res) {
                             console.log("Mail logged")
                         }
-                        return res;
+                        console.log("1")
                     })
             }
-            return res;
         })
     }
-    return res;
+    console.log("2")
+    event.completed()
 }
 
 Office.initialize = () => {
