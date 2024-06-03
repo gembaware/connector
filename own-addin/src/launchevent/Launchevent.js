@@ -22,24 +22,6 @@ const AuthenticationRequestError = {
     AuthenticationCodeExpired: 'AuthenticationCodeExpired',
 }
 
-// type RequesterState = {
-//     model: string
-//     id: number
-//     api_key: string
-//     authenticationRequestError: string
-// }
-//
-// type RequesterProps = {
-//     db_name: string
-//     login: string
-//     pwd: string
-//     model: string
-//     id: number
-//     fields: Array<string>
-//     domain: any
-//     values: Object
-// }
-
 class Requester {
     state
     props
@@ -214,10 +196,13 @@ async function onMessageSendHandler(event) {
                         if (res) {
                             console.log("Mail logged")
                         }
+                        return res;
                     })
             }
+            return res;
         })
     }
+    return res;
 }
 
 Office.initialize = () => {
