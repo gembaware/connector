@@ -101,7 +101,7 @@ class Requester {
 
     setMailDate = () => {
         const today = new Date().toISOString()
-        this.state.dateEmail = today.substring(0, 10) +" "+ today.substring(12, 20)
+        this.state.dateEmail = today//.substring(0, 10) +" "+ today.substring(12, 20)
     }
 
     getIdPartner = async (fields, domain) => {
