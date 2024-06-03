@@ -184,10 +184,10 @@ async function onMessageSendHandler(event) {
         model: 'res.partner',
         id: 0,
     });
-
+    const item = Office.context.mailbox.item
     let res = await requester.login();
     if (res) {
-        await Office.context.mailbox.item.to.getAsync(async (result) => {
+        await item.to.getAsync(async (result) => {
             requester.setEmail(result.value[0].emailAddress)
             requester.setName(result.value[0].displayName)
             const domain = [
@@ -196,19 +196,23 @@ async function onMessageSendHandler(event) {
             res = await requester.getIdPartner(["id"], domain)
             if (res) {
                 requester.state.model = "gmb.mail.relation"
-                await Office.context.mailbox.item.body.getAsync(async (result) => {
-                    requester.setMailContent(result.value.split('<div id="x_appendonsend"></div>')[0]) // remove the history and keep only the most recent message
-                    const fields = ["date_mail", "destinataire", "body"]
-                    const values = {
-                        "date_mail": requester.state.dateEmail,
-                        "destinataire": requester.state.idPartner,
-                        "body": requester.state.mailContent,
-                    }
-                    res = await requester.create(fields, values)
-                    if (res) {
-                        console.log("Mail logged")
-                    }
-                })
+                await item.body.getAsync(
+                    Office.CoercionType.Text,
+                    { asyncContext: { currentItem: item } },
+                    async (result) =>
+                    {
+                        requester.setMailContent(result.value) // remove the history and keep only the most recent message
+                        const fields = ["date_mail", "destinataire", "body"]
+                        const values = {
+                            "date_mail": requester.state.dateEmail,
+                            "destinataire": requester.state.idPartner,
+                            "body": requester.state.mailContent,
+                        }
+                        res = await requester.create(fields, values)
+                        if (res) {
+                            console.log("Mail logged")
+                        }
+                    })
             }
         })
     }
