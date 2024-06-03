@@ -78,10 +78,6 @@ module.exports = async (env, options)  => {
                   .replace(/localhost:3000/g, domain);
               },
             },
-            {
-              to: "ComposeMailLogger.js",
-              from: "./src/ComposeMailLogger.js"
-            },
           ]
         }
       ),
@@ -93,11 +89,6 @@ module.exports = async (env, options)  => {
         filename: "taskpane.html",
           template: './src/taskpane/taskpane.html',
           chunks: ['taskpane', 'vendor', 'polyfills']
-      }),
-      new HtmlWebpackPlugin({
-        filename: "loader.html",
-          template: "./src/loader.html",
-          chunks: ['loader']
       }),
       new HtmlWebpackPlugin({
         filename: "dialog.html",
