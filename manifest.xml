@@ -74,31 +74,6 @@
               </Group>
             </OfficeTab>
           </ExtensionPoint>
-          <!-- Added things -->
-          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
-            <OfficeTab id="TabDefault">
-              <Group id="msgComposeGroup">
-                <Label resid="GroupLabel"/>
-                <Control xsi:type="Button" id="msgComposeOpenPaneButton">
-                  <Label resid="TaskpaneButton.Label"/>
-                  <Supertip>
-                    <Title resid="TaskpaneButton.Label"/>
-                    <Description resid="TaskpaneButton.Tooltip"/>
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="64" resid="Icon.64x64"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
-                    <bt:Image size="128" resid="Icon.128x128"/>
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <SourceLocation resid="Taskpane.Url"/>
-                  </Action>
-                </Control>
-              </Group>
-            </OfficeTab>
-          </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
     </Hosts>
@@ -129,8 +104,13 @@
       </Requirements>
       <Hosts>
         <Host xsi:type="MailHost">
+          <Runtimes>
+            <Runtime resid="Taskpane.Url">
+              <Override type="javascript" resid="JSRuntime.Url"/>
+            </Runtime>
+          </Runtimes>
           <DesktopFormFactor>
-            <FunctionFile resid="Commands.Url"/>
+            <FunctionFile resid="Taskpane.Url"/>
             <ExtensionPoint xsi:type="MessageReadCommandSurface">
               <OfficeTab id="TabDefault">
                 <Group id="msgReadGroup">
@@ -159,24 +139,21 @@
             <!-- Added things -->
             <ExtensionPoint xsi:type="MessageComposeCommandSurface">
               <OfficeTab id="TabDefault">
-                <Group id="msgComposeGroup">
+                <Group id="msgComposeCmdGroup">
                   <Label resid="GroupLabel"/>
-                  <Control xsi:type="Button" id="msgComposeOpenPaneButton">
-                    <Label resid="TaskpaneButton.Label"/>
+                  <Control xsi:type="Button" id="msgComposeLogMail">
+                    <Label resid="FunctionButton.Label"/>
                     <Supertip>
-                      <Title resid="TaskpaneButton.Label"/>
-                      <Description resid="TaskpaneButton.Tooltip"/>
+                      <Title resid="FunctionButton.Title"/>
+                      <Description resid="FunctionButton.Tooltip"/>
                     </Supertip>
                     <Icon>
                       <bt:Image size="16" resid="Icon.16x16"/>
                       <bt:Image size="32" resid="Icon.32x32"/>
-                      <bt:Image size="64" resid="Icon.64x64"/>
                       <bt:Image size="80" resid="Icon.80x80"/>
-                      <bt:Image size="128" resid="Icon.128x128"/>
                     </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="Taskpane.Url"/>
-                      <SupportsPinning>true</SupportsPinning>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>onMessageSendHandler</FunctionName>
                     </Action>
                   </Control>
                 </Group>
@@ -195,13 +172,17 @@
         </bt:Images>
         <bt:Urls>
           <bt:Url id="Taskpane.Url" DefaultValue="https://gembaware.github.io/connector//taskpane.html"/>
+          <bt:Url id="JSRuntime.Url" DefaultValue="https://gembaware.github.io/connector//ComposeMailLogger.js"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="Odoo for Outlook"/>
           <bt:String id="TaskpaneButton.Label" DefaultValue="Open sender profile"/>
+          <bt:String id="FunctionButton.Label" DefaultValue="Log mail in Odoo"/>
+          <bt:String id="FunctionButton.Title" DefaultValue="Log mail in Odoo"/>
         </bt:ShortStrings>
         <bt:LongStrings>
           <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane displaying all available options."/>
+          <bt:String id="FunctionButton.Tooltip" DefaultValue="Send request to Odoo to log the mail."/>
         </bt:LongStrings>
       </Resources>
     </VersionOverrides>
