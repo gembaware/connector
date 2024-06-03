@@ -95,6 +95,11 @@ module.exports = async (env, options)  => {
           chunks: ['taskpane', 'vendor', 'polyfills']
       }),
       new HtmlWebpackPlugin({
+        filename: "loader.html",
+          template: "./src/loader.html",
+          chunks: ['loader']
+      }),
+      new HtmlWebpackPlugin({
         filename: "dialog.html",
         template: "./src/taskpane/components/Login/dialog.html"
       }),
