@@ -113,15 +113,19 @@ class RestApi(http.Controller):
                     datas = []
                     new_resource = request.env[str(model_name)].create(
                         data['values'])
+                    _logger.warning("R" + str(new_resource))
                     partner_records = request.env[
                         str(model_name)].search_read(
                         domain=[('id', '=', new_resource.id)],
                         fields=fields
                     )
+                    _logger.warning(str(partner_records))
                     new_data = json.dumps({'created_record': partner_records, })
+                    _logger.warning("DATA: " + str(new_data))
                     datas.append(new_data)
                     return request.make_response(data=datas)
-                except:
+                except Exception as error:  # TODO a utiliser partout
+                    _logger.warning("Error: " + str(error))
                     return ("<html><body><h2>Invalid JSON Data"
                             "</h2></body></html>")
         if method == 'PUT':
@@ -198,7 +202,6 @@ class RestApi(http.Controller):
         specified url, and it will authenticate the api_key and then will
         generate the result"""
         http_method = request.httprequest.method
-        _logger.warning(str(request.httprequest.data))
         data = json.loads(request.httprequest.data)
         api_key = data['api_key']
         auth_api = self.auth_api_key(api_key)

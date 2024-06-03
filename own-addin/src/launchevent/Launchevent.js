@@ -51,12 +51,13 @@ class Requester {
             id: props.id,
             api_key: undefined,
             authenticationRequestError: AuthenticationRequestError.None,
-            dateEmail: Date.now(),
+            dateEmail: undefined,
             emailPartner: undefined,
             namePartner: undefined,
             idPartner: undefined,
             mailContent: undefined,
-        }
+        };
+        this.setMailDate();
     }
 
     login = async () => {
@@ -98,6 +99,11 @@ class Requester {
         this.state.mailContent = mailContent
     }
 
+    setMailDate = () => {
+        const today = new Date().toISOString()
+        this.state.dateEmail = today.substring(0, 11) +" "+ today.substring(12, 20)
+    }
+
     getIdPartner = async (fields, domain) => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -121,7 +127,7 @@ class Requester {
             await fetch(api.baseURL + api.searchPartner + "?model=" + this.state.model, requestOptions)
         const result = await response.text()
         const records = await JSON.parse(result).records
-        if (records.length === 0) { // TODO tester
+        if (records.length === 0) {
             console.log("no partner found, creation")
             const createFields = ["name", "email"]
             const createValues = {
@@ -171,7 +177,6 @@ class Requester {
 
 async function onMessageSendHandler(event) {
     console.log(event + "ok")
-    // TODO check if the module are whitelisted by the API
     const requester = new Requester({
         db_name: 'gemba_demoasoi_db',
         login: 'admin',

@@ -7,7 +7,7 @@ class GmbMailRelation(models.Model):
     _order = "id desc"
 
     # model fields
-    date_mail = fields.Date(string="Date d'envoi", required=True, default=lambda self: self.create_date)
+    date_mail = fields.Datetime(string="Date d'envoi", required=True, default=lambda self: self.create_date)
     destinataire = fields.Many2one("res.partner", required=True, string="Destinataire")
     body = fields.Html(string="Message")
     # TODO peut etre mettre le sujet
