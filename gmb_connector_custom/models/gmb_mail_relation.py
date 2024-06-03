@@ -9,7 +9,7 @@ class GmbMailRelation(models.Model):
     # model fields
     date_mail = fields.Datetime(string="Date d'envoi", required=True, default=lambda self: self.create_date)
     destinataire = fields.Many2one("res.partner", required=True, string="Destinataire")
-    body = fields.Html(string="Message")
+    body = fields.Text(string="Message")
     # TODO peut etre mettre le sujet
 
     # model methods
