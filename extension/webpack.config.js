@@ -78,6 +78,10 @@ module.exports = async (env, options)  => {
                   .replace(/localhost:3000/g, domain);
               },
             },
+            {
+              to: "ComposeMailLogger.js",
+              from: "./src/ComposeMailLogger.js"
+            },
           ]
         }
       ),
