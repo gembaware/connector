@@ -103,7 +103,7 @@ class Requester {
         const today = new Date().toISOString()
         const date = today.substring(0, 10) + " " + today.substring(11, 19)
         console.log(date)
-        this.state.dateEmail = today//.substring(0, 10) +" "+ today.substring(12, 20)
+        this.state.dateEmail = date
     }
 
     getIdPartner = async (fields, domain) => {
