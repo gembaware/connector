@@ -11,6 +11,7 @@
         <field name="model">gmb.mail.relation</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="name"/>
                 <field name="date_mail"/>
                 <field name="destinataire"/>
                 <field name="body"/>
@@ -27,13 +28,16 @@
                     <button name="action_MER" string="Analyser" type="object"/>
                 </header>
                 <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
                     <group>
                         <field name="destinataire"/>
                     </group>
                     <group>
                         <field name="date_mail"/>
                     </group>
-                    <field name="body" widget="html"/>
+                    <field name="body"/>
                 </sheet>
             </form>
         </field>

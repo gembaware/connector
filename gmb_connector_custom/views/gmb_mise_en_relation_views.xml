@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gmb_mise_en_relation_action" model="ir.actions.act_window">
+        <field name="name">Mises en relation</field>
+        <field name="res_model">gmb.mise.en.relation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="gmb_mise_en_relation_view_tree" model="ir.ui.view">
+        <field name="name">gmb.mise.en.relation.tree</field>
+        <field name="model">gmb.mise.en.relation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_mail"/>
+                <field name="qui"/>
+                <field name="avec_qui"/>
+                <field name="message"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="gmb_mise_en_relation_view_form" model="ir.ui.view">
+        <field name="name">gmb.mise.en.relation.form</field>
+        <field name="model">gmb.mise.en.relation</field>
+        <field name="arch" type="xml">
+            <form name="mise_en_relation">
+                <sheet>
+                    <group>
+                        <field name="qui"/>
+                        <field name="avec_qui"/>
+                    </group>
+                    <group>
+                        <field name="date_mail"/>
+                        <field name="message"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gmb_mise_en_relation_view_search" model="ir.ui.view">
+        <field name="name">gmb.mise.en.relation.search</field>
+        <field name="model">gmb.mise.en.relation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="qui"/>
+                <field name="avec_qui"/>
+                <field name="date_mail"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Message" name="message" context="{'group_by':'message'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>
