@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <menuitem id="gmb_mise_en_relation_menu_root" name="Mise en relation">
-        <menuitem id="gmb_mise_en_relation_menu_action" name="Relations" action="gmb_mise_en_relation_action" sequence="10"/>
-        <menuitem id="gmb_mail_relation_menu" name="Mails" sequence="20">
-            <menuitem id="gmb_mail_relation_menu_action" name="Mails" action="gmb_mail_relation_action" sequence="10"/>
-        </menuitem>
-    </menuitem>
-</odoo>
