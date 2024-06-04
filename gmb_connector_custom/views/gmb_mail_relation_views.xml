@@ -10,7 +10,7 @@
         <field name="name">gmb.mail.relation.tree</field>
         <field name="model">gmb.mail.relation</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree create="False">
                 <field name="name"/>
                 <field name="date_mail"/>
                 <field name="destinataire"/>
@@ -23,7 +23,7 @@
         <field name="name">gmb.mail.relation.form</field>
         <field name="model">gmb.mail.relation</field>
         <field name="arch" type="xml">
-            <form name="mail_relation">
+            <form name="mail_relation" create="False">
                 <header>
                     <button name="action_MER" string="Analyser" type="object"/>
                 </header>
@@ -33,11 +33,25 @@
                     </h1>
                     <group>
                         <field name="destinataire"/>
-                    </group>
-                    <group>
                         <field name="date_mail"/>
                     </group>
                     <field name="body"/>
+                    <notebook>
+                        <page name="Relations">
+                            <field name="relations"/>
+                        </page>
+                        <page name="Analyse">
+                            <field name="analyzed" invisible="1"/>
+                            <span invisible="analyzed" class="text-warning">
+                                Ce mail n'as pas encore été analysé. Cliquez sur Analyser pour lancer l'analyse.
+                            </span>
+                            <group>
+                                <field name="analyze_response" invisible="not analyzed"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+
                 </sheet>
             </form>
         </field>

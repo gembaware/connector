@@ -17,22 +17,45 @@ class GmbMailRelation(models.Model):
     date_mail = fields.Datetime(string="Date d'envoi", required=True, default=lambda self: self.create_date)
     destinataire = fields.Many2one("res.partner", required=True, string="Destinataire")
     body = fields.Text(string="Message", readonly=True)
+    relations = fields.One2many("gmb.mise.en.relation", "message", string="Relations")
+    analyzed = fields.Boolean(string="Déjà analyser", readonly=True)
+    analyze_response = fields.Text(string="Retour d'analyse", readonly=True)
     # TODO peut etre mettre le sujet
 
     # model methods
-    # def create(self):
-    #     pass
-
-    def action_MER(self):
-        prompt = "fais moi une liste des relations cités dans le mail suivant : " + self.body
-        response = Web_Editor().generate_text(prompt, [])
-        _logger.warning(str(response))
+    def action_MER(self, manual: bool = True):
+        prompt = ("fais moi une liste des personnes en cités dans le mail suivant en excluant le destinataire du mail '"
+                  + self.destinataire.name + "'. La liste doit être une chaine de caractère où le nom et uniquement "
+                                             "le nom, pas de titre honorifique (Mr, Dr, etc...), des personnes est "
+                                             "séparé par une virgule, exemple : 'jean Marie,Pierre Paul'. "
+                                             "\n Corps du mail : " + self.body)
+        if not manual:
+            try:
+                self._analyse_mail(prompt)
+            except Exception as error:
+                _logger.error(error)
+                return False
+        else:
+            self._analyse_mail(prompt)
+        self.analyzed = True
         return True
 
-    # model methods
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     # for vals in vals_list:
-    #     #     if vals.get('name', "Nouveau") == "Nouveau":
-    #     #         vals['name'] = self.env['ir.sequence'].next_by_code(
-    #     #             'gmb.mise.en.relation') or "Nouveau"
+    def _analyse_mail(self, prompt):
+        self.analyze_response = str(Web_Editor().generate_text(prompt, []))
+        relation_list = self.analyze_response.split(',')
+        for name in relation_list:
+            self.env['gmb.mise.en.relation'].create({
+                "date_mail": self.date_mail,
+                "qui": self.destinataire.id,
+                "avec_qui": name,
+                "message": self.id,
+            })
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', "Nouveau") == "Nouveau":
+            vals['name'] = self.env['ir.sequence'].next_by_code(
+                'gmb.mise.en.relation') or "Nouveau"
+        res = super(GmbMailRelation, self).create(vals)
+        self.action_MER(False)
+        return res
