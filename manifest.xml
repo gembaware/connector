@@ -37,7 +37,6 @@
         <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
         <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
     </Rule>
-    <!-- <DisableEntityHighlighting>false</DisableEntityHighlighting> -->
     <VersionOverrides
             xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
         <VersionOverrides
@@ -56,14 +55,6 @@
                     </Runtimes>
                     <DesktopFormFactor>
                         <FunctionFile resid="WebViewRuntime.Url"/>
-                        <!-- TODO extension point taskpane -->
-                        <!-- OnMessageSend event -->
-<!--                        <ExtensionPoint xsi:type="LaunchEvent">-->
-<!--                            <LaunchEvents>-->
-<!--                                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="SoftBlock" />-->
-<!--                            </LaunchEvents>-->
-<!--                            <SourceLocation resid="WebViewRuntime.Url" />-->
-<!--                        </ExtensionPoint>-->
                         <ExtensionPoint xsi:type="MessageComposeCommandSurface">
                             <OfficeTab id="TabDefault">
                                 <Group id="msgComposeCmdGroup">
@@ -99,15 +90,15 @@
                 </bt:Images>
                 <bt:Urls>
                     <bt:Url id="WebViewRuntime.Url" DefaultValue="https://gembaware.github.io/connector//loader.html"/>
-                    <bt:Url id="JSRuntime.Url" DefaultValue="https://gembaware.github.io/connector/:/Launchevent.js"/> <!-- TODO tsx ? -->
+                    <bt:Url id="JSRuntime.Url" DefaultValue="https://gembaware.github.io/connector//Launchevent.js"/> <!-- TODO tsx ? -->
                 </bt:Urls>
                 <bt:ShortStrings>
-                    <bt:String id="GroupLabel" DefaultValue="Git the gist"/>
-                    <bt:String id="TaskpaneButton.Label" DefaultValue="Insert gist"/>
-                    <bt:String id="TaskpaneButton.Title" DefaultValue="Insert gist"/>
+                    <bt:String id="GroupLabel" DefaultValue="Odoo for Outlook"/>
+                    <bt:String id="TaskpaneButton.Label" DefaultValue="Log mail in Odoo"/>
+                    <bt:String id="TaskpaneButton.Title" DefaultValue="Log mail in Odoo"/>
                 </bt:ShortStrings>
                 <bt:LongStrings>
-                    <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Displays a list of your gists and allows you to insert their contents into the current message."/>
+                    <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Log a mail whith rest api on click on the button"/>
                 </bt:LongStrings>
             </Resources>
         </VersionOverrides>
