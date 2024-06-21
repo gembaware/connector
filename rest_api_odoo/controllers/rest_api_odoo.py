@@ -197,6 +197,17 @@ def auth_api_key(api_key):
     return response
 
 
+def _authenticate():
+    data = json.loads(request.httprequest.data)
+    # authenticate
+    api_key = data['api_key']
+    auth_api = auth_api_key(api_key)
+    username = data['login']
+    password = data['password']
+    request.session.authenticate(request.session.db, username, password)
+    return auth_api
+
+
 class RestApi(http.Controller):
     """This is a controller which is used to generate responses based on the
     api requests"""
@@ -225,18 +236,38 @@ class RestApi(http.Controller):
         specified url, and it will authenticate the api_key and then
         will generate the result"""
         http_method = 'GET'
-        data = json.loads(request.httprequest.data)
-
-        # authenticate
-        api_key = data['api_key']
-        auth_api = auth_api_key(api_key)
-        username = data['login']
-        password = data['password']
-        request.session.authenticate(request.session.db, username, password)
+        auth_api = _authenticate()
 
         # prepare data
         model = kw.get('model')
         return _fetch(auth_api, http_method, kw, model)
+
+    @http.route(['/print_document'], type="http", method=['POST'], auth="none", csrf=False, cors="*")
+    def print_document(self, **kw):
+        auth_api = _authenticate()
+
+        # prepare data
+        model_id = kw.get('model')
+        model = request.env['ir.model'].search([('id', '=', model_id)])
+        if not model:
+            return ("<html><body><h3>Invalid model, check spelling or maybe "
+                    "the related "
+                    "module is not installed"
+                    "</h3></body></html>")
+        if type(auth_api) is bool:
+            record_id = kw.get('id')
+            report_id = kw.get('report_id')
+            record = request.env[model.name].search([('id', '=', record_id)])
+            if not record:
+                return ("<html><body><h3>Record does not exist or no id provided (0)</h3></body></html>")
+            report = request.env['ir.actions.report'].search([('id', '=', report_id)])
+            if report:
+                if report.model != model.name:
+                    return (f"<html><body><h3>No report {report_id} for model {model.id}</h3></body></html>")
+            else:
+                report = request.env['ir.action.report'].search([('model', '=', model.name)], limit=1)
+            # TODO : appel de impression
+
 
     @http.route(['/odoo_connect'], type="http", auth="none", csrf=False,
                 methods=['GET', 'POST'], cors="*")
