@@ -257,7 +257,7 @@ class RestApi(http.Controller):
         if type(auth_api) is bool:
             record_id = kw.get('id')
             report_id = kw.get('report_id')
-            record = request.env[model.name].search([('id', '=', record_id)])
+            record = request.env[model.model].search([('id', '=', record_id)])
             if not record:
                 return ("<html><body><h3>Record does not exist or no id provided (0)</h3></body></html>")
             report = request.env['ir.actions.report'].search([('id', '=', report_id)])
