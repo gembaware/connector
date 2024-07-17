@@ -267,6 +267,9 @@ class RestApi(http.Controller):
                     return (f"<html><body><h3>No report {report_id} for model {model.id}</h3></body></html>")
             else:
                 report = r.search([('model', '=', model.model)], limit=1)
+                if not report:
+                    return (f"<html><body><h3>No report for model {model.id}</h3></body></html>")
+
 
             context = request.env['res.users'].context_get()
             output = r.with_context(context).sudo()._render_qweb_pdf(report, res_ids=[record_id])
