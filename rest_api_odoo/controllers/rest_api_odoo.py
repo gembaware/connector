@@ -249,6 +249,7 @@ class RestApi(http.Controller):
         # prepare data
         model_id = kw.get('model')
         model = request.env['ir.model'].search([('id', '=', model_id)])
+        _logger.warning('model : ' + model.model)
         if not model:
             return ("<html><body><h3>Invalid model, check spelling or maybe "
                     "the related "
@@ -265,7 +266,7 @@ class RestApi(http.Controller):
                 if report.model != model.name:
                     return (f"<html><body><h3>No report {report_id} for model {model.id}</h3></body></html>")
             else:
-                report = request.env['ir.actions.report'].search([('model', '=', model.name)])
+                report = request.env['ir.actions.report'].search([('model', '=', model.model)])
             _logger.warning("test + " + str(report))
             # TODO : appel de impression
 
