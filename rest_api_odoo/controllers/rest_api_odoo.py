@@ -279,7 +279,7 @@ class RestApi(http.Controller):
                 "file_type": output[1],
                 "binary_datas": output[0],
             }
-            return (f"{datas}")
+            return request.make_response(datas=datas)
 
 
     @http.route(['/odoo_connect'], type="http", auth="none", csrf=False,
