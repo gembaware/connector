@@ -268,8 +268,9 @@ class RestApi(http.Controller):
             else:
                 report = request.env['ir.actions.report'].search([('model', '=', model.model)], limit=1)
             _logger.warning("test + " + str(report))
-            pdf = request.env['ir.actions.report']._get_report_from_name(report.report_name).render_qweb_pdf([record_id])
-            _logger.warning('pdf : ' + str(pdf))
+            r = request.env.ref(report.report_file)
+            output = r.sudo().render_qweb_pdf([record.id])
+            _logger.warning('output : ' + str(output))
             # TODO : appel de impression
 
 
