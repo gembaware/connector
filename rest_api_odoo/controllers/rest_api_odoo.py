@@ -277,7 +277,7 @@ class RestApi(http.Controller):
                 "res_id": record_id,
                 "report_name": report.report_name,
                 "file_type": output[1],
-                "binary_datas": output[0],
+                "binary_datas": output[0]
             })
             return request.make_response(data=datas)
 
