@@ -266,8 +266,10 @@ class RestApi(http.Controller):
                 if report.model != model.name:
                     return (f"<html><body><h3>No report {report_id} for model {model.id}</h3></body></html>")
             else:
-                report = request.env['ir.actions.report'].search([('model', '=', model.model)])
+                report = request.env['ir.actions.report'].search([('model', '=', model.model)], limit=1)
             _logger.warning("test + " + str(report))
+            pdf = request.env['report'].sudo().get_pdf([record_id], report.name)
+            _logger.warning('pdf : ' + str(pdf))
             # TODO : appel de impression
 
 
