@@ -268,10 +268,18 @@ class RestApi(http.Controller):
             else:
                 report = request.env['ir.actions.report'].search([('model', '=', model.model)], limit=1)
             _logger.warning("test + " + str(report))
-            r = request.env.ref(report.report_file)
-            output = r.sudo().render_qweb_pdf([record.id])
-            _logger.warning('output : ' + str(output))
-            # TODO : appel de impression
+            r = request.env['ir.actions.report']
+            context = request.env['res.users'].context_get()
+            output = r.with_context(context).sudo()._render_qweb_pdf(report, )
+            _logger.warning('output : ' + str(output[0]))
+            datas = {
+                "model": model.model,
+                "res_id": record_id,
+                "report_name": report.report_name,
+                "file_type": output[1],
+                "binary_datas": output[0],
+            }
+            return (f"{datas}")
 
 
     @http.route(['/odoo_connect'], type="http", auth="none", csrf=False,
