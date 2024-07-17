@@ -272,13 +272,13 @@ class RestApi(http.Controller):
             context = request.env['res.users'].context_get()
             output = r.with_context(context).sudo()._render_qweb_pdf(report, )
             _logger.warning('output : ' + str(output[0]))
-            datas = {
+            datas = json.dumps({
                 "model": model.model,
                 "res_id": record_id,
                 "report_name": report.report_name,
                 "file_type": output[1],
                 "binary_datas": output[0],
-            }
+            })
             return request.make_response(data=datas)
 
 
