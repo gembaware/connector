@@ -249,7 +249,6 @@ class RestApi(http.Controller):
         # prepare data
         model_id = kw.get('model')
         model = request.env['ir.model'].search([('id', '=', model_id)])
-        _logger.warning('model : ' + model.model)
         if not model:
             return ("<html><body><h3>Invalid model, check spelling or maybe "
                     "the related "
@@ -259,19 +258,18 @@ class RestApi(http.Controller):
             record_id = kw.get('id')
             report_id = kw.get('report_id')
             record = request.env[model.model].search([('id', '=', record_id)])
+            r = request.env['ir.actions.report']
             if not record:
                 return ("<html><body><h3>Record does not exist or no id provided (0)</h3></body></html>")
-            report = request.env['ir.actions.report'].search([('id', '=', report_id)])
+            report = r.search([('id', '=', report_id)])
             if report:
                 if report.model != model.model:
                     return (f"<html><body><h3>No report {report_id} for model {model.id}</h3></body></html>")
             else:
-                report = request.env['ir.actions.report'].search([('model', '=', model.model)], limit=1)
-            _logger.warning("test + " + str(report))
-            r = request.env['ir.actions.report']
+                report = r.search([('model', '=', model.model)], limit=1)
+
             context = request.env['res.users'].context_get()
-            output = r.with_context(context).sudo()._render_qweb_pdf(report, )
-            _logger.warning('output : ' + str(output[0]))
+            output = r.with_context(context).sudo()._render_qweb_pdf(report, res_ids=[record_id])
             datas = json.dumps({
                 "model": model.model,
                 "res_id": record_id,
