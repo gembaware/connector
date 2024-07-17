@@ -255,8 +255,8 @@ class RestApi(http.Controller):
                     "module is not installed"
                     "</h3></body></html>")
         if type(auth_api) is bool:
-            record_id = kw.get('id')
-            report_id = kw.get('report_id')
+            record_id = int(kw.get('id'))
+            report_id = int(kw.get('report_id'))
             record = request.env[model.model].search([('id', '=', record_id)])
             r = request.env['ir.actions.report']
             if not record:
