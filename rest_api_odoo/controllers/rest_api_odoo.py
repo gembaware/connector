@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import io
 import json
+import base64
 import logging
 from datetime import datetime, date
 
 from odoo import http
-from odoo.http import request
+from odoo.http import request, content_disposition
 
 _logger = logging.getLogger(__name__)
 
@@ -273,14 +275,13 @@ class RestApi(http.Controller):
 
             context = request.env['res.users'].context_get()
             output = r.with_context(context).sudo()._render_qweb_pdf(report, res_ids=[record_id])
-            datas = json.dumps({
-                "model": model.model,
-                "res_id": record_id,
-                "report_name": report.report_name,
-                "file_type": output[1],
-                "binary_datas": str(output[0])
-            })
-            return request.make_response(data=datas)
+            headers = [
+                ('Content-Type', 'pdf'),
+                ('Content-Length', len(output[0])),
+                ('Content-Disposition', content_disposition("odoo_{}.pdf".format(report.report_name + record.name)))
+            ]
+            datas = output[0]
+            return request.make_response(datas, headers)
 
 
     @http.route(['/odoo_connect'], type="http", auth="none", csrf=False,
